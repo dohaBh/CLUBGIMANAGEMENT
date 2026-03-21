@@ -1,0 +1,2269 @@
+{# {% extends 'base.html.twig' %}
+
+{% block title %}Club GI - Accueil{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            overflow-x: hidden;
+        }
+
+        /* Navbar Premium */
+        .navbar-custom {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 1.2rem 0;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.05);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-custom.scrolled {
+            padding: 0.8rem 0;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-link-custom {
+            color: #d4af37 !important;
+            font-weight: 600;
+            padding: 0.6rem 1.5rem !important;
+            margin: 0 0.3rem;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .nav-link-custom:hover {
+            background: rgba(212,175,55,0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn-nav {
+            padding: 0.7rem 1.8rem;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 0.95rem;
+        }
+
+        .btn-nav-primary {
+            background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+            color: #fff !important;
+            box-shadow: 0 4px 15px rgba(212,175,55,0.3);
+        }
+
+        .btn-nav-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(212,175,55,0.4);
+        }
+
+        .btn-nav-secondary {
+            border: 2px solid #d4af37;
+            color: #d4af37 !important;
+            background: transparent;
+        }
+
+        .btn-nav-secondary:hover {
+            background: #d4af37;
+            color: #fff !important;
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section - Gift Box */
+        .hero-wrapper {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #3d5fa8 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 20px 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated Background Particles */
+        .particle {
+            position: absolute;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
+            50% { transform: translateY(-100px) translateX(50px); opacity: 0.6; }
+        }
+
+        .gift-container {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .gift-box {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 0 auto 3rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .gift-box:hover {
+            transform: scale(1.05);
+        }
+
+        .box-body {
+            width: 280px;
+            height: 280px;
+            background: linear-gradient(145deg, #d4af37, #f4d03f);
+            border-radius: 20px;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(212,175,55,0.4);
+        }
+
+        .box-ribbon-v {
+            width: 60px;
+            height: 280px;
+            background: linear-gradient(to right, #b8941f, #d4af37);
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
+        }
+
+        .box-ribbon-h {
+            width: 280px;
+            height: 60px;
+            background: linear-gradient(to bottom, #b8941f, #d4af37);
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
+        }
+
+        .box-lid {
+            width: 300px;
+            height: 40px;
+            background: linear-gradient(145deg, #f4d03f, #d4af37);
+            position: absolute;
+            top: -15px;
+            left: -10px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(212,175,55,0.5);
+        }
+
+        .bow {
+            width: 80px;
+            height: 80px;
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .bow::before,
+        .bow::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 50px;
+            background: linear-gradient(145deg, #f4d03f, #d4af37);
+            border-radius: 50% 50% 0 0;
+            box-shadow: 0 5px 20px rgba(212,175,55,0.4);
+        }
+
+        .bow::before {
+            left: 0;
+            transform: rotate(-20deg);
+        }
+
+        .bow::after {
+            right: 0;
+            transform: rotate(20deg);
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            letter-spacing: -1px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-20px); }
+        }
+
+        .scroll-indicator i {
+            color: #d4af37;
+            font-size: 2rem;
+        }
+
+        /* Bubbles Section */
+        .bubbles-section {
+            background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
+            padding: 6rem 0 8rem;
+            position: relative;
+            overflow: visible;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: #6c757d;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Bubble Cards */
+        .bubbles-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 4rem 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 3rem;
+        }
+
+        .bubble-card {
+            background: #fff;
+            border-radius: 30px;
+            padding: 3rem 2.5rem;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            animation: floatUp 6s ease-in-out infinite;
+        }
+
+        .bubble-card:nth-child(1) { animation-delay: 0s; }
+        .bubble-card:nth-child(2) { animation-delay: 1.5s; }
+        .bubble-card:nth-child(3) { animation-delay: 3s; }
+        .bubble-card:nth-child(4) { animation-delay: 4.5s; }
+
+        @keyframes floatUp {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .bubble-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(212,175,55,0.3);
+            border-color: #d4af37;
+            animation: none;
+        }
+
+        .bubble-icon {
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 2rem;
+            background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(212,175,55,0.3);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .bubble-card:hover .bubble-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .bubble-icon::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border: 3px solid rgba(212,175,55,0.2);
+            border-radius: 50%;
+            animation: pulse 3s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        .bubble-icon i {
+            font-size: 3rem;
+            color: #fff;
+        }
+
+        .bubble-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 1.2rem;
+        }
+
+        .bubble-description {
+            font-size: 1.1rem;
+            color: #6c757d;
+            line-height: 1.9;
+            margin-bottom: 1.5rem;
+        }
+
+        .bubble-stats {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-badge {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #1e3c72;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            padding: 5rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-text {
+            font-size: 1.3rem;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 3rem;
+            line-height: 1.8;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-cta {
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            border: none;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-cta-primary {
+            background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+            color: #1e3c72;
+            box-shadow: 0 10px 30px rgba(212,175,55,0.4);
+        }
+
+        .btn-cta-primary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(212,175,55,0.5);
+            color: #1e3c72;
+        }
+
+        .btn-cta-secondary {
+            background: transparent;
+            border: 3px solid #fff;
+            color: #fff;
+        }
+
+        .btn-cta-secondary:hover {
+            background: #fff;
+            color: #1e3c72;
+            transform: translateY(-5px);
+        }
+
+        /* Footer */
+        .footer-custom {
+            background: #1a1a2e;
+            color: #fff;
+            padding: 4rem 2rem 2rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-section {
+            margin-bottom: 2rem;
+        }
+
+        .footer-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .footer-text {
+            color: rgba(255,255,255,0.7);
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        .footer-link {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-link:hover {
+            color: #d4af37;
+            padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-link {
+            width: 45px;
+            height: 45px;
+            background: rgba(212,175,55,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #d4af37;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .social-link:hover {
+            background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+            color: #fff;
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 2rem;
+            margin-top: 2rem;
+            text-align: center;
+            color: rgba(255,255,255,0.5);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.5rem; }
+            .section-title { font-size: 2rem; }
+            .gift-box { width: 200px; height: 200px; }
+            .box-body { width: 180px; height: 180px; }
+            .bubbles-container { 
+                grid-template-columns: 1fr;
+                gap: 3rem;
+                padding: 0 1.5rem;
+            }
+            .cta-buttons { flex-direction: column; }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .bubbles-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 3rem 2rem;
+            }
+        }
+
+        @media (min-width: 1400px) {
+            .bubbles-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 5rem 4rem;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container">
+        <a class="navbar-brand" href="#">🎓 Club GI</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link-custom btn-nav-secondary btn-nav" href="{{ path('app_login') }}">
+                        <i class="bi bi-box-arrow-in-right"></i> Connexion
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link-custom btn-nav-primary btn-nav" href="{{ path('app_register') }}">
+                        <i class="bi bi-person-plus"></i> S'inscrire
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section - Gift Box -->
+<section class="hero-wrapper">
+    <!-- Animated Particles -->
+    <div class="particle" style="width: 10px; height: 10px; top: 10%; left: 10%;"></div>
+    <div class="particle" style="width: 15px; height: 15px; top: 20%; left: 80%;"></div>
+    <div class="particle" style="width: 8px; height: 8px; top: 60%; left: 15%;"></div>
+    <div class="particle" style="width: 12px; height: 12px; top: 70%; left: 85%;"></div>
+    <div class="particle" style="width: 20px; height: 20px; top: 30%; left: 50%;"></div>
+
+    <div class="gift-container">
+        <div class="gift-box">
+            <div class="box-lid"></div>
+            <div class="bow"></div>
+            <div class="box-body">
+                <div class="box-ribbon-v"></div>
+                <div class="box-ribbon-h"></div>
+            </div>
+        </div>
+        
+        <h1 class="hero-title">Bienvenue au Club GI</h1>
+        <p class="hero-subtitle">
+            Découvrez une communauté dynamique d'étudiants passionnés par l'innovation technologique 
+            et l'excellence en génie informatique.
+        </p>
+    </div>
+
+    <div class="scroll-indicator">
+        <i class="bi bi-chevron-down"></i>
+    </div>
+</section>
+
+<!-- Bubbles Section -->
+<section class="bubbles-section">
+    <div class="section-header">
+        <h2 class="section-title">Ce que nous offrons</h2>
+        <p class="section-subtitle">
+            Des opportunités uniques pour développer vos compétences et élargir votre réseau
+        </p>
+    </div>
+
+    <div class="bubbles-container">
+        <!-- Events Bubble -->
+        <div class="bubble-card">
+            <div class="bubble-icon">
+                <i class="bi bi-calendar-event"></i>
+            </div>
+            <h3 class="bubble-title">Événements</h3>
+            <p class="bubble-description">
+                Hackathons, conférences tech, rencontres avec des professionnels et soirées networking organisés tout au long de l'année.
+            </p>
+            <div class="bubble-stats">
+                <span class="stat-badge">50+ par an</span>
+            </div>
+        </div>
+
+        <!-- Members Bubble -->
+        <div class="bubble-card">
+            <div class="bubble-icon">
+                <i class="bi bi-people"></i>
+            </div>
+            <h3 class="bubble-title">Membres</h3>
+            <p class="bubble-description">
+                Rejoignez une communauté de 500+ étudiants motivés, partagez vos idées et créez des connexions durables.
+            </p>
+            <div class="bubble-stats">
+                <span class="stat-badge">500+ membres</span>
+            </div>
+        </div>
+
+        <!-- Formations Bubble -->
+        <div class="bubble-card">
+            <div class="bubble-icon">
+                <i class="bi bi-laptop"></i>
+            </div>
+            <h3 class="bubble-title">Formations</h3>
+            <p class="bubble-description">
+                Ateliers pratiques sur IA, développement web/mobile, cybersécurité, cloud computing et les dernières technologies.
+            </p>
+            <div class="bubble-stats">
+                <span class="stat-badge">30+ ateliers</span>
+            </div>
+        </div>
+
+        <!-- Projects Bubble -->
+        <div class="bubble-card">
+            <div class="bubble-icon">
+                <i class="bi bi-code-slash"></i>
+            </div>
+            <h3 class="bubble-title">Projets</h3>
+            <p class="bubble-description">
+                Travaillez sur des projets réels, développez votre portfolio et gagnez une expérience concrète valorisée par les recruteurs.
+            </p>
+            <div class="bubble-stats">
+                <span class="stat-badge">40+ projets</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="cta-content">
+        <h2 class="cta-title">Prêt à commencer votre aventure ?</h2>
+        <p class="cta-text">
+            Rejoignez le Club GI dès aujourd'hui et faites partie d'une communauté qui façonne 
+            l'avenir de la technologie au Maroc.
+        </p>
+        <div class="cta-buttons">
+            <a href="{{ path('app_register') }}" class="btn-cta btn-cta-primary">
+                <i class="bi bi-rocket-takeoff"></i>
+                Rejoindre le club
+            </a>
+            <a href="{{ path('app_login') }}" class="btn-cta btn-cta-secondary">
+                <i class="bi bi-box-arrow-in-right"></i>
+                Se connecter
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer-custom">
+    <div class="footer-content">
+        <div class="row">
+            <div class="col-md-4 footer-section">
+                <h5 class="footer-title">Club GI - ENSAO</h5>
+                <p class="footer-text">
+                    Le club des étudiants en Génie Informatique à l'École Nationale des Sciences Appliquées d'Oujda.
+                    Innovation, Excellence, Collaboration.
+                </p>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="social-link"><i class="bi bi-instagram"></i></a>
+                    <a href="#" class="social-link"><i class="bi bi-linkedin"></i></a>
+                    <a href="#" class="social-link"><i class="bi bi-github"></i></a>
+                </div>
+            </div>
+            
+            <div class="col-md-4 footer-section">
+                <h5 class="footer-title">Liens Rapides</h5>
+                <a href="{{ path('app_register') }}" class="footer-link">S'inscrire</a>
+                <a href="{{ path('app_login') }}" class="footer-link">Se connecter</a>
+                <a href="#" class="footer-link">Événements</a>
+                <a href="#" class="footer-link">Projets</a>
+            </div>
+            
+            <div class="col-md-4 footer-section">
+                <h5 class="footer-title">Contact</h5>
+                <p class="footer-text">
+                    <i class="bi bi-envelope footer-icon"></i> contact@clubgi.ma<br>
+                    <i class="bi bi-telephone footer-icon"></i> +212 6XX XXX XXX<br>
+                    <i class="bi bi-geo-alt footer-icon"></i> ENSAO, Complexe Universitaire<br>
+                    Oujda 60000, Maroc
+                </p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2024 Club GI - ENSAO. Tous droits réservés. Développé avec 💛 par les membres du club.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+        const navbar = document.querySelector('.navbar-custom');
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+
+    // Smooth scroll
+    document.querySelector('.scroll-indicator').addEventListener('click', function() {
+        document.querySelector('.bubbles-section').scrollIntoView({ behavior: 'smooth' });
+    });
+</script>
+{% endblock %} #}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{# {% extends 'base.html.twig' %}
+
+{% block title %}Club GI - Accueil{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-blue: #1e3a8a;
+            --secondary-blue: #3b82f6;
+            --accent-gold: #d4af37;
+            --light-gray: #f8fafc;
+            --dark-gray: #334155;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: var(--dark-gray);
+        }
+        
+        /* Navigation améliorée */
+        .navbar-custom {
+            background: white;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+            padding: 1rem 0;
+        }
+        
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary-blue) !important;
+            margin-left: 10%;
+            position: relative;
+        }
+        
+        .navbar-brand::before {
+            content: "🎓";
+            margin-right: 8px;
+        }
+        
+        .navbar-nav {
+            margin-right: 10%;
+        }
+        
+        .nav-link {
+            color: var(--dark-gray) !important;
+            font-weight: 500;
+            margin: 0 0.5rem;
+            transition: color 0.3s;
+        }
+        
+        .nav-link:hover {
+            color: var(--secondary-blue) !important;
+        }
+        
+        .btn-nav {
+            padding: 0.5rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-login {
+            background: transparent;
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+        }
+        
+        .btn-login:hover {
+            background: var(--primary-blue);
+            color: white;
+        }
+        
+        .btn-register {
+            background: var(--accent-gold);
+            color: white;
+            border: 2px solid var(--accent-gold);
+            margin-left: 0.5rem;
+        }
+        
+        .btn-register:hover {
+            background: #b8941f;
+            border-color: #b8941f;
+            color: white;
+        }
+        
+        /* Hero Section améliorée */
+        .hero-section {
+            background: linear-gradient(135deg, #f0f7ff 0%, #e6f0ff 100%);
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+            padding-top: 4rem;
+        }
+        
+        .hero-content {
+            padding-right: 3rem;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--primary-blue);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: #64748b;
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+        }
+        
+        .hero-image {
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(30, 58, 138, 0.15);
+            transition: transform 0.5s;
+        }
+        
+        .hero-image:hover {
+            transform: translateY(-5px);
+        }
+        
+        /* Features Section améliorée */
+        .features-section {
+            padding: 6rem 0;
+            background: white;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .section-subtitle {
+            color: #64748b;
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 4rem;
+            font-size: 1.1rem;
+        }
+        
+        .feature-card {
+            background: var(--light-gray);
+            border-radius: 16px;
+            padding: 2.5rem 2rem;
+            height: 100%;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(30, 58, 138, 0.1);
+            border-color: var(--secondary-blue);
+        }
+        
+        .feature-icon-wrapper {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--secondary-blue), var(--primary-blue));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-icon {
+            font-size: 2rem;
+            color: white;
+        }
+        
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+        
+        .feature-text {
+            color: #64748b;
+            line-height: 1.6;
+        }
+        
+        /* Footer amélioré */
+        .footer-custom {
+            background: var(--primary-blue);
+            color: white;
+            padding: 4rem 0 2rem;
+        }
+        
+        .footer-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+        
+        .footer-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent-gold);
+        }
+        
+        .footer-contact i {
+            color: var(--accent-gold);
+            margin-right: 10px;
+            width: 20px;
+        }
+        
+        .copyright {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            margin-top: 3rem;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .navbar-brand {
+                margin-left: 5%;
+            }
+            
+            .navbar-nav {
+                margin-right: 5%;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-content {
+                padding-right: 0;
+                margin-bottom: 3rem;
+                text-align: center;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .btn-nav {
+                display: block;
+                width: 100%;
+                margin: 0.5rem 0;
+            }
+            
+            .btn-register {
+                margin-left: 0;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{{ path('app_root') }}">CLUB GI</a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                {% if not app.user %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_login') }}">
+                            <i class="bi bi-box-arrow-in-right me-1"></i>Connexion
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn-nav btn-register" href="{{ path('app_register') }}">
+                            <i class="bi bi-person-plus me-1"></i>S'inscrire
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <span class="nav-link">
+                            <i class="bi bi-person-circle me-1"></i>{{ app.user.prenom }}
+                        </span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_logout') }}">
+                            <i class="bi bi-box-arrow-right me-1"></i>Déconnexion
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        La Communauté des <span style="color: var(--accent-gold);">Génies Informatiques</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Rejoignez le club référence de l'ENSAO pour développer vos compétences, 
+                        participer à des projets innovants et élargir votre réseau professionnel 
+                        dans le domaine de l'informatique.
+                    </p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="{{ path('app_register') }}" 
+                           class="btn btn-register btn-nav">
+                            <i class="bi bi-person-plus me-2"></i>Rejoindre le club
+                        </a>
+                        <a href="#features" 
+                           class="btn btn-login btn-nav">
+                            <i class="bi bi-arrow-down-circle me-2"></i>Découvrir
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                     class="img-fluid hero-image" 
+                     alt="Étudiants en informatique collaborant">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="features-section">
+    <div class="container">
+        <h2 class="section-title">Nos Atouts</h2>
+        <p class="section-subtitle">
+            Découvrez ce qui fait du Club GI la communauté incontournable 
+            pour les étudiants en Génie Informatique de l'ENSAO.
+        </p>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon-wrapper">
+                        <i class="bi bi-people feature-icon"></i>
+                    </div>
+                    <h3 class="feature-title">Réseau Élite</h3>
+                    <p class="feature-text">
+                        Connectez-vous avec les meilleurs talents du domaine, 
+                        échangez avec des professionnels et construisez un réseau 
+                        solide pour votre carrière future.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon-wrapper">
+                        <i class="bi bi-laptop feature-icon"></i>
+                    </div>
+                    <h3 class="feature-title">Formations Avancées</h3>
+                    <p class="feature-text">
+                        Accédez à des ateliers exclusifs sur les technologies 
+                        émergentes, les frameworks modernes et les meilleures 
+                        pratiques du développement logiciel.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon-wrapper">
+                        <i class="bi bi-trophy feature-icon"></i>
+                    </div>
+                    <h3 class="feature-title">Projets d'Excellence</h3>
+                    <p class="feature-text">
+                        Participez à des projets ambitieux, des hackathons et 
+                        des compétitions qui valoriseront votre portfolio et 
+                        développeront vos compétences pratiques.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer-custom">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 mb-4">
+                <h4 class="footer-title">🎓 Club GI</h4>
+                <p style="color: #cbd5e1;">
+                    La communauté d'excellence des étudiants en Génie Informatique 
+                    de l'École Nationale des Sciences Appliquées d'Oujda.
+                </p>
+            </div>
+            
+            <div class="col-lg-4 mb-4">
+                <h4 class="footer-title">Liens Rapides</h4>
+                <div class="footer-links">
+                    <a href="{{ path('app_root') }}">Accueil</a>
+                    <a href="{{ path('app_register') }}">Inscription</a>
+                    <a href="{{ path('app_login') }}">Connexion</a>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 mb-4">
+                <h4 class="footer-title">Contact</h4>
+                <div class="footer-contact">
+                    <p><i class="bi bi-geo-alt"></i> ENSAO, Oujda, Maroc</p>
+                    <p><i class="bi bi-envelope"></i> contact@clubgi.ma</p>
+                    <p><i class="bi bi-telephone"></i> +212 5 XX XX XX XX</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>&copy; {{ "now"|date("Y") }} Club GI - ENSAO. Tous droits réservés.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Animation douce pour les ancres
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+    
+    // Animation au scroll
+    document.addEventListener('DOMContentLoaded', function() {
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // Observe les cartes de features
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.5s, transform 0.5s';
+            observer.observe(card);
+        });
+    });
+</script>
+{% endblock %} #}
+
+{# {% extends 'base.html.twig' %}
+
+{% block title %}Club GI - Accueil{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Navbar personnalisée */
+        .navbar-custom {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            padding: 1rem 0;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fff !important;
+            margin-left: 10%;
+            background: linear-gradient(135deg, #fff 0%, #d4af37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .navbar-nav {
+            margin-right: 10%;
+        }
+
+        .nav-link-custom {
+            color: #fff !important;
+            font-weight: 500;
+            padding: 0.5rem 1.2rem !important;
+            margin: 0 0.3rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link-custom:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn-nav-primary {
+            background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+            color: #1e3c72 !important;
+            font-weight: 600;
+            border: none;
+        }
+
+        .btn-nav-primary:hover {
+            background: linear-gradient(135deg, #f4d03f 0%, #d4af37 100%);
+            box-shadow: 0 5px 15px rgba(212,175,55,0.4);
+        }
+
+        .btn-nav-secondary {
+            border: 2px solid #d4af37;
+            color: #d4af37 !important;
+            font-weight: 600;
+            background: transparent;
+        }
+
+        .btn-nav-secondary:hover {
+            background: #d4af37;
+            color: #1e3c72 !important;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #3d5fa8 100%);
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            padding: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #fff 0%, #d4af37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            color: #e8eaf6;
+            margin-bottom: 2rem;
+        }
+
+        .btn-hero {
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-hero-primary {
+            background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+            color: #1e3c72;
+        }
+
+        .btn-hero-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(212,175,55,0.4);
+        }
+
+        .btn-hero-secondary {
+            background: transparent;
+            border: 2px solid #fff;
+            color: #fff;
+        }
+
+        .btn-hero-secondary:hover {
+            background: #fff;
+            color: #1e3c72;
+            transform: translateY(-3px);
+        }
+
+        .hero-image {
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .hero-image:hover {
+            transform: scale(1.02);
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 6rem 0;
+            background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 3rem;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #d4af37 0%, #f4d03f 100%);
+            border-radius: 2px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2.5rem 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            height: 100%;
+            border: 1px solid #e8eaf6;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(30,60,114,0.15);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #2a5298 0%, #3d5fa8 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            position: relative;
+        }
+
+        .feature-icon::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border: 2px solid #d4af37;
+            border-radius: 50%;
+            opacity: 0.3;
+        }
+
+        .feature-icon i {
+            color: #d4af37;
+            font-size: 2rem;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 1rem;
+        }
+
+        .feature-text {
+            color: #6c757d;
+            line-height: 1.8;
+        }
+
+        /* Footer */
+        .footer-custom {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 3rem 0 1.5rem;
+        }
+
+        .footer-title {
+            color: #d4af37;
+            font-weight: 600;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-text {
+            color: #e8eaf6;
+            line-height: 1.8;
+        }
+
+        .footer-icon {
+            color: #d4af37;
+            margin-right: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .navbar-brand {
+                margin-left: 5%;
+            }
+            .navbar-nav {
+                margin-right: 5%;
+            }
+            .hero-title {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            🎓 Club GI
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link nav-link-custom btn-nav-secondary" href="{{ path('app_login') }}">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Connexion
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-link-custom btn-nav-primary" href="{{ path('app_register') }}">
+                        <i class="bi bi-person-plus me-2"></i>S'inscrire
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero-section" style="margin-top: 76px;">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <div class="hero-content">
+                    <h1 class="hero-title">Club GI</h1>
+                    <p class="hero-subtitle">
+                        La communauté des étudiants en Génie Informatique à l'ENSAO.
+                        Rejoignez-nous pour des événements passionnants, des formations de pointe 
+                        et des projets innovants qui façonneront votre avenir.
+                    </p>
+                    <div class="d-flex gap-3 flex-wrap">
+                        <a href="{{ path('app_register') }}" class="btn btn-hero btn-hero-primary">
+                            <i class="bi bi-person-plus me-2"></i>Rejoindre le club
+                        </a>
+                        <a href="{{ path('app_login') }}" class="btn btn-hero btn-hero-secondary">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Se connecter
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                     class="img-fluid hero-image" 
+                     alt="Étudiants en informatique">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section">
+    <div class="container">
+        <h2 class="section-title text-center">Pourquoi nous rejoindre ?</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <h4 class="feature-title text-center">Réseautage</h4>
+                    <p class="feature-text text-center">
+                        Rencontrez d'autres passionnés d'informatique et élargissez votre réseau professionnel 
+                        avec des étudiants et des experts du domaine.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-laptop"></i>
+                    </div>
+                    <h4 class="feature-title text-center">Formations</h4>
+                    <p class="feature-text text-center">
+                        Participez à des ateliers et formations sur les nouvelles technologies, 
+                        langages de programmation et méthodologies innovantes.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-trophy"></i>
+                    </div>
+                    <h4 class="feature-title text-center">Projets</h4>
+                    <p class="feature-text text-center">
+                        Participez à des projets concrets et collaboratifs pour développer 
+                        vos compétences et enrichir votre portfolio professionnel.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer-custom">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-6">
+                <h5 class="footer-title">Club GI - ENSAO</h5>
+                <p class="footer-text">
+                    Génie Informatique<br>
+                    École Nationale des Sciences Appliquées d'Oujda
+                </p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <p class="footer-text mb-2">
+                    <i class="bi bi-envelope footer-icon"></i>contact@clubgi.ma
+                </p>
+                <p class="footer-text">
+                    <i class="bi bi-geo-alt footer-icon"></i>ENSAO, Oujda, Maroc
+                </p>
+            </div>
+        </div>
+        <hr style="border-color: rgba(255,255,255,0.1); margin: 2rem 0 1rem;">
+        <div class="text-center">
+            <p class="footer-text mb-0">&copy; 2024 Club GI. Tous droits réservés.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %} #}
+{# 
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Club GI - Accueil{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Navbar personnalisée */
+        .navbar-custom {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+        }
+
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-left: 10%;
+            background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .navbar-nav {
+            margin-right: 10%;
+        }
+
+        .nav-link-custom {
+            color: #d4af37 !important;
+            font-weight: 600;
+            padding: 0.5rem 1.2rem !important;
+            margin: 0 0.3rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link-custom:hover {
+            background: rgba(212,175,55,0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn-nav-primary {
+            background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+            color: #fff !important;
+            font-weight: 600;
+            border: none;
+        }
+
+        .btn-nav-primary:hover {
+            background: linear-gradient(135deg, #f4d03f 0%, #d4af37 100%);
+            box-shadow: 0 5px 15px rgba(212,175,55,0.4);
+            color: #fff !important;
+        }
+
+        .btn-nav-secondary {
+            border: 2px solid #d4af37;
+            color: #d4af37 !important;
+            font-weight: 600;
+            background: transparent;
+        }
+
+        .btn-nav-secondary:hover {
+            background: #d4af37;
+            color: #fff !important;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #3d5fa8 100%);
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            padding: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #fff 0%, #d4af37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            color: #e8eaf6;
+            margin-bottom: 2rem;
+        }
+
+        .btn-hero {
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-hero-primary {
+            background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+            color: #1e3c72;
+        }
+
+        .btn-hero-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(212,175,55,0.4);
+        }
+
+        .btn-hero-secondary {
+            background: transparent;
+            border: 2px solid #fff;
+            color: #fff;
+        }
+
+        .btn-hero-secondary:hover {
+            background: #fff;
+            color: #1e3c72;
+            transform: translateY(-3px);
+        }
+
+        .hero-image {
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .hero-image:hover {
+            transform: scale(1.02);
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 6rem 0;
+            background: #fff;
+            position: relative;
+        }
+
+        .features-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 300px;
+            background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: #6c757d;
+            text-align: center;
+            margin-bottom: 4rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .timeline-container {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .timeline-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 10px 30px rgba(212,175,55,0.3);
+            z-index: 2;
+        }
+
+        .timeline-icon i {
+            color: #fff;
+            font-size: 2.5rem;
+        }
+
+        .timeline-content {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            flex: 1;
+            margin: 0 2rem;
+            transition: all 0.4s ease;
+            border: 2px solid transparent;
+        }
+
+        .timeline-content:hover {
+            transform: scale(1.03);
+            border-color: #d4af37;
+            box-shadow: 0 15px 50px rgba(212,175,55,0.2);
+        }
+
+        .timeline-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .timeline-text {
+            color: #6c757d;
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        .stats-section {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            padding: 4rem 2rem;
+            border-radius: 20px;
+            margin-top: 5rem;
+            box-shadow: 0 15px 50px rgba(30,60,114,0.3);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #e8eaf6;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-item,
+            .timeline-item:nth-child(even) {
+                flex-direction: column;
+            }
+
+            .timeline-content {
+                margin: 2rem 0 0 0;
+            }
+        }
+
+        /* Footer */
+        .footer-custom {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 3rem 0 1.5rem;
+        }
+
+        .footer-title {
+            color: #d4af37;
+            font-weight: 600;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-text {
+            color: #e8eaf6;
+            line-height: 1.8;
+        }
+
+        .footer-icon {
+            color: #d4af37;
+            margin-right: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .navbar-brand {
+                margin-left: 5%;
+            }
+            .navbar-nav {
+                margin-right: 5%;
+            }
+            .hero-title {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            🎓 Club GI
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link nav-link-custom btn-nav-secondary" href="{{ path('app_login') }}">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Connexion
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-link-custom btn-nav-primary" href="{{ path('app_register') }}">
+                        <i class="bi bi-person-plus me-2"></i>S'inscrire
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero-section" style="margin-top: 76px;">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <div class="hero-content">
+                    <h1 class="hero-title">Club GI</h1>
+                    <p class="hero-subtitle">
+                        La communauté des étudiants en Génie Informatique à l'ENSAO.
+                        Rejoignez-nous pour des événements passionnants, des formations de pointe 
+                        et des projets innovants qui façonneront votre avenir.
+                    </p>
+                    <div class="d-flex gap-3 flex-wrap">
+                        <a href="{{ path('app_register') }}" class="btn btn-hero btn-hero-primary">
+                            <i class="bi bi-person-plus me-2"></i>Rejoindre le club
+                        </a>
+                        <a href="{{ path('app_login') }}" class="btn btn-hero btn-hero-secondary">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Se connecter
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                     class="img-fluid hero-image" 
+                     alt="Étudiants en informatique">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section">
+    <div class="container">
+        <h2 class="section-title">Pourquoi nous rejoindre ?</h2>
+        <p class="section-subtitle">
+            Découvrez les opportunités uniques qui vous attendent au sein de notre communauté
+        </p>
+        
+        <div class="timeline-container">
+            <div class="timeline-item">
+                <div class="timeline-icon">
+                    <i class="bi bi-people"></i>
+                </div>
+                <div class="timeline-content">
+                    <h3 class="timeline-title">Réseau Professionnel</h3>
+                    <p class="timeline-text">
+                        Connectez-vous avec des étudiants passionnés, des alumni et des professionnels du secteur IT. 
+                        Participez à des événements de networking et construisez des relations durables qui 
+                        façonneront votre carrière.
+                    </p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-icon">
+                    <i class="bi bi-code-slash"></i>
+                </div>
+                <div class="timeline-content">
+                    <h3 class="timeline-title">Compétences Techniques</h3>
+                    <p class="timeline-text">
+                        Maîtrisez les dernières technologies à travers nos ateliers pratiques et hackathons. 
+                        De l'IA au développement web, en passant par la cybersécurité et le cloud computing, 
+                        développez une expertise recherchée par les entreprises.
+                    </p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-icon">
+                    <i class="bi bi-rocket-takeoff"></i>
+                </div>
+                <div class="timeline-content">
+                    <h3 class="timeline-title">Projets Innovants</h3>
+                    <p class="timeline-text">
+                        Transformez vos idées en réalité en travaillant sur des projets concrets. 
+                        Collaborez avec d'autres membres pour créer des solutions innovantes, enrichir 
+                        votre portfolio et acquérir une expérience pratique valorisée par les recruteurs.
+                    </p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-icon">
+                    <i class="bi bi-trophy"></i>
+                </div>
+                <div class="timeline-content">
+                    <h3 class="timeline-title">Compétitions & Événements</h3>
+                    <p class="timeline-text">
+                        Participez à des hackathons, concours de programmation et challenges techniques. 
+                        Testez vos compétences, gagnez des prix et faites-vous remarquer par les entreprises 
+                        partenaires lors de nos événements prestigieux.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-section">
+            <div class="row">
+                <div class="col-md-3 col-6">
+                    <div class="stat-item">
+                        <div class="stat-number">500+</div>
+                        <div class="stat-label">Membres Actifs</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-item">
+                        <div class="stat-number">50+</div>
+                        <div class="stat-label">Événements/An</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-item">
+                        <div class="stat-number">30+</div>
+                        <div class="stat-label">Projets Réalisés</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-item">
+                        <div class="stat-number">15+</div>
+                        <div class="stat-label">Partenaires</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer-custom">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-6">
+                <h5 class="footer-title">Club GI - ENSAO</h5>
+                <p class="footer-text">
+                    Génie Informatique<br>
+                    École Nationale des Sciences Appliquées d'Oujda
+                </p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <p class="footer-text mb-2">
+                    <i class="bi bi-envelope footer-icon"></i>contact@clubgi.ma
+                </p>
+                <p class="footer-text">
+                    <i class="bi bi-geo-alt footer-icon"></i>ENSAO, Oujda, Maroc
+                </p>
+            </div>
+        </div>
+        <hr style="border-color: rgba(255,255,255,0.1); margin: 2rem 0 1rem;">
+        <div class="text-center">
+            <p class="footer-text mb-0">&copy; 2024 Club GI. Tous droits réservés.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %} #}

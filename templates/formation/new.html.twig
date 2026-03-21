@@ -1,0 +1,268 @@
+{% extends 'baseDash.html.twig' %}
+{% block title %}Nouvelle Formation{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+
+<link rel="stylesheet" href="{{ asset('css/newFormation.css') }}">
+
+{% endblock %}
+
+{% block body %}
+<div class="formation-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="form-card">
+                    <div class="form-header">
+                        <div class="icon-circle">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h2>Créer une Nouvelle Formation</h2>
+                    </div>
+
+                    <div class="form-body">
+                        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+                        <div class="card-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-calendar-alt"></i>
+                                <div class="stat-label">Planification</div>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-users"></i>
+                                <div class="stat-label">Équipe</div>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <div class="stat-label">Localisation</div>
+                            </div>
+                        </div>
+
+                        <!-- Informations générales -->
+                        <div class="form-section">
+                            <div class="section-title">
+                                <i class="fas fa-info-circle"></i>
+                                Informations Générales
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form_label(form.titre, null, {
+                                            'label_attr': {'class': 'form-label'}
+                                        }) }}
+                                        <div class="input-group-icon">
+                                            <i class="fas fa-heading"></i>
+                                            {{ form_widget(form.titre, {
+                                                'attr': {'class': 'form-control', 'placeholder': 'Ex: Formation en Marketing Digital'}
+                                            }) }}
+                                        </div>
+                                        {{ form_errors(form.titre) }}
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form_label(form.module, null, {
+                                            'label_attr': {'class': 'form-label'}
+                                        }) }}
+                                        <div class="input-group-icon">
+                                            <i class="fas fa-layer-group"></i>
+                                            {{ form_widget(form.module, {
+                                                'attr': {'class': 'form-select'}
+                                            }) }}
+                                        </div>
+                                        {{ form_errors(form.module) }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                {{ form_label(form.description, null, {
+                                    'label_attr': {'class': 'form-label'}
+                                }) }}
+                                {{ form_widget(form.description, {
+                                    'attr': {'class': 'form-control', 'placeholder': 'Décrivez les objectifs et le contenu de la formation...'}
+                                }) }}
+                                <div class="form-text">
+                                    <i class="fas fa-lightbulb"></i>
+                                    Incluez les objectifs pédagogiques et les compétences à acquérir
+                                </div>
+                                {{ form_errors(form.description) }}
+                            </div>
+                        </div>
+
+                        <!-- Équipe de formation -->
+                        <div class="form-section">
+                            <div class="section-title">
+                                <i class="fas fa-chalkboard-teacher"></i>
+                                Équipe de Formation
+                            </div>
+
+                            <div class="form-group">
+                                {{ form_label(form.formateurs, 'Formateurs', {
+                                    'label_attr': {'class': 'form-label'}
+                                }) }}
+                                {{ form_widget(form.formateurs, {
+                                    'attr': {
+                                        'class': 'formateurs-select',
+                                        'data-placeholder': 'Sélectionnez les formateurs...'
+                                    }
+                                }) }}
+                                <div class="form-text">
+                                    <i class="fas fa-users"></i>
+									Maintenez cmd (mac) ou ctrl (windows) pour selection multiple <br/>
+                                    Sélectionnez jusqu'à 6 formateurs pour cette session
+									
+                                </div>
+                                {{ form_errors(form.formateurs) }}
+                            </div>
+                        </div>
+
+                        <!-- Détails logistiques -->
+                        <div class="form-section">
+                            <div class="section-title">
+                                <i class="fas fa-cog"></i>
+                                Détails Logistiques
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        {{ form_label(form.date, null, {
+                                            'label_attr': {'class': 'form-label'}
+                                        }) }}
+                                        <div class="input-group-icon">
+                                            <i class="fas fa-calendar"></i>
+                                            {{ form_widget(form.date, {
+                                                'attr': {'class': 'form-control'}
+                                            }) }}
+                                        </div>
+                                        {{ form_errors(form.date) }}
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        {{ form_label(form.lieu, null, {
+                                            'label_attr': {'class': 'form-label'}
+                                        }) }}
+                                        <div class="input-group-icon">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            {{ form_widget(form.lieu, {
+                                                'attr': {'class': 'form-control', 'placeholder': 'Salle de conférence A'}
+                                            }) }}
+                                        </div>
+                                        {{ form_errors(form.lieu) }}
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        {{ form_label(form.nbParticipants, null, {
+                                            'label_attr': {'class': 'form-label'}
+                                        }) }}
+                                        <div class="input-group-icon">
+                                            <i class="fas fa-user-friends"></i>
+                                            {{ form_widget(form.nbParticipants, {
+                                                'attr': {'class': 'form-control', 'placeholder': '20'}
+                                            }) }}
+                                        </div>
+                                        {{ form_errors(form.nbParticipants) }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                {{ form_label(form.statutFormation, null, {
+                                    'label_attr': {'class': 'form-label'}
+                                }) }}
+                                <div class="input-group-icon">
+                                    <i class="fas fa-flag"></i>
+                                    {{ form_widget(form.statutFormation, {
+                                        'attr': {'class': 'form-select'}
+                                    }) }}
+                                </div>
+                                {{ form_errors(form.statutFormation) }}
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <a href="{{ path('app_formations_index') }}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i>
+                                Annuler
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-check"></i>
+                                Créer la Formation
+                            </button>
+                        </div>
+
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+    // Animation au scroll
+    document.addEventListener('DOMContentLoaded', function() {
+        const formSections = document.querySelectorAll('.form-section');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        formSections.forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            section.style.transition = 'all 0.5s ease';
+            observer.observe(section);
+        });
+
+        // Gestion du select multiple des formateurs
+        const formateurSelect = document.querySelector('.formateurs-select');
+        if (formateurSelect) {
+            // Vérifier si Select2 est disponible
+            if (typeof $.fn.select2 !== 'undefined') {
+                $(formateurSelect).select2({
+                    theme: 'default',
+                    width: '100%',
+                    placeholder: 'Sélectionnez les formateurs...',
+                    allowClear: true,
+                    maximumSelectionLength: 6,
+                    language: {
+                        maximumSelected: function (e) {
+                            return "Vous ne pouvez sélectionner que " + e.maximum + " formateurs";
+                        }
+                    }
+                });
+            } else {
+                // Sinon, amélioration du select natif
+                formateurSelect.setAttribute('multiple', 'multiple');
+                formateurSelect.setAttribute('size', '5');
+
+                // Limiter à 6 sélections
+                formateurSelect.addEventListener('change', function() {
+                    const selected = Array.from(this.selectedOptions);
+                    if (selected.length > 6) {
+                        alert('Vous ne pouvez sélectionner que 6 formateurs maximum');
+                        selected[selected.length - 1].selected = false;
+                    }
+                });
+            }
+        }
+    });
+</script>
+{% endblock %}

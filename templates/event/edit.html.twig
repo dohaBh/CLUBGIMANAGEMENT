@@ -1,0 +1,84 @@
+{% extends 'baseDash.html.twig' %}
+
+{% block title %}Modifier l'événement{% endblock %}
+
+{% block body %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/EditEvent.css') }}">
+{% endblock %}
+<div class="form-container">
+    <div class="form-header">
+        <h1>✏️ Modifier l'Événement</h1>
+        <p>{{ event.titre }}</p>
+    </div>
+
+    {{ form_start(form) }}
+        <div class="form-group">
+            {{ form_label(form.titre) }}
+            {{ form_widget(form.titre, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.titre) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.theme) }}
+            {{ form_widget(form.theme, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.theme) }}
+        </div>
+
+        <div class="form-group">
+            <div class="form-check">
+                {{ form_widget(form.enCollab, {'attr': {'class': 'form-check-input'}}) }}
+                {{ form_label(form.enCollab) }}
+            </div>
+            {{ form_errors(form.enCollab) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.partenaire) }}
+            {{ form_widget(form.partenaire, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.partenaire) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.date) }}
+            {{ form_widget(form.date, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.date) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.lieu) }}
+            {{ form_widget(form.lieu, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.lieu) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.programme) }}
+            {{ form_widget(form.programme, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.programme) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.statutEvent) }}
+            {{ form_widget(form.statutEvent, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.statutEvent) }}
+        </div>
+
+        <div class="form-actions">
+            <a href="{{ path('app_event_index') }}" class="btn btn-secondary">
+                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                Annuler
+            </a>
+            <button type="submit" class="btn btn-primary">
+                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                Enregistrer les modifications
+            </button>
+        </div>
+    {{ form_end(form) }}
+</div>
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends 'baseDash.html.twig' %}
+
+{% block title %}Modifier mon profil - {{ user.prenom }} {{ user.nom }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/profile.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="profile-container">
+    <div class="edit-header">
+        <a href="{{ path('app_profile') }}" class="back-button">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            Retour au profil
+        </a>
+        <h1>Modifier mon profil</h1>
+    </div>
+
+    <div class="edit-form-container">
+        {{ form_start(form, {'attr': {'class': 'profile-form'}}) }}
+        
+        <div class="form-section">
+            <h3 class="section-title">Informations personnelles</h3>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form_label(form.nom) }}
+                    {{ form_widget(form.nom) }}
+                    {{ form_errors(form.nom) }}
+                </div>
+                
+                <div class="form-group">
+                    {{ form_label(form.prenom) }}
+                    {{ form_widget(form.prenom) }}
+                    {{ form_errors(form.prenom) }}
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form_label(form.email) }}
+                    {{ form_widget(form.email) }}
+                    {{ form_errors(form.email) }}
+                </div>
+                
+                <div class="form-group">
+                    {{ form_label(form.telephone) }}
+                    {{ form_widget(form.telephone) }}
+                    {{ form_errors(form.telephone) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3 class="section-title">Informations académiques</h3>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form_label(form.niveau) }}
+                    {{ form_widget(form.niveau) }}
+                    {{ form_errors(form.niveau) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3 class="section-title">Sécurité</h3>
+            
+            <div class="form-group">
+                {{ form_label(form.plainPassword) }}
+                {{ form_widget(form.plainPassword) }}
+                <small class="form-help">Laissez vide pour conserver votre mot de passe actuel</small>
+                {{ form_errors(form.plainPassword) }}
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-save">
+                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                Enregistrer les modifications
+            </button>
+            
+            <a href="{{ path('app_profile') }}" class="btn-cancel">
+                Annuler
+            </a>
+        </div>
+        
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}

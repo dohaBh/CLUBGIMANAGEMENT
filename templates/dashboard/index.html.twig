@@ -1,0 +1,209 @@
+ {% extends 'baseDash.html.twig' %} 
+
+{% block stylesheets %}
+     {{ parent() }} 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/Dash.css') }}">
+
+{% endblock %}
+
+{% block body %}
+<!-- Main Content -->
+<div class="dashboard-content">
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+        <div class="welcome-content">
+            <h1 class="welcome-title ">Bienvenue à votre club</h1>
+            <p class="welcome-subtitle">
+                Explorez toutes les activités et ressources du GI
+            </p>
+        </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="stats-section">
+        <div class="stat-card">
+            <div class="stat-number">50+</div>
+            <div class="stat-label">Membres</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">10+</div>
+            <div class="stat-label">Événements</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">30+</div>
+            <div class="stat-label">Formations</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">15+</div>
+            <div class="stat-label">Projets</div>
+        </div>
+    </div>
+
+    {# <!-- Gallery Section -->
+    <section class="gallery-section">
+        <div class="section-header">
+            <h2 class="section-title">Moments Mémorables</h2>
+            <p class="section-subtitle">Découvrez les meilleurs moments du Club GI</p>
+        </div>
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <div class="gallery-placeholder">
+                    <i class="bi bi-images"></i>
+                </div>
+                <div class="gallery-overlay">
+                    <h3 class="gallery-title">Hackathon 2025</h3>
+                    <p>Une compétition nationale regroupant plus de 17 ecoles et 60 participants </p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <div class="gallery-placeholder">
+                    <i class="bi bi-camera-fill"></i>
+                </div>
+                <div class="gallery-overlay">
+                    <h3 class="gallery-title">TechConnect </h3>
+                    <p>Rencontre avec des experts du domaine et laureats de l'ENSAO de la filière genie Informatique </p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <div class="gallery-placeholder">
+                    <i class="bi bi-people"></i>
+                </div>
+                <div class="gallery-overlay">
+                    <h3 class="gallery-title"> Journées Informatiques </h3>
+                    <p>Échanges et opportunités professionnelles plus orientations à nos CP </p>
+                </div>
+            </div>
+        </div>
+    </section> #}
+
+    <!-- Gallery Section -->
+<section class="gallery-section">
+    <div class="section-header">
+        <h2 class="section-title">Moments Mémorables</h2>
+        <p class="section-subtitle">Découvrez les meilleurs moments du Club GI</p>
+    </div>
+    <div class="gallery-grid">
+        <div class="gallery-item">
+            <div class="gallery-image">
+                <img src="images/Pentathon.jpeg" alt="Hackathon 2025 - Compétition nationale" loading="lazy">
+            </div>
+            <div class="gallery-overlay">
+                <h3 class="gallery-title">Hackathon 2025</h3>
+                <p>Une compétition nationale regroupant plus de 17 écoles et 60 participants</p>
+            </div>
+        </div>
+        <div class="gallery-item">
+            <div class="gallery-image">
+                <img src="images/techconnect.jpeg" alt="TechConnect - Rencontre avec des experts" loading="lazy">
+
+            </div>
+            <div class="gallery-overlay">
+                <h3 class="gallery-title">TechConnect</h3>
+                <p>Rencontre avec des experts du domaine et lauréats de l'ENSAO de la filière génie Informatique</p>
+            </div>
+        </div>
+        <div class="gallery-item">
+            <div class="gallery-image">
+                <img src="images/journee.jpeg" alt="Journées Informatiques - Échanges et opportunités" loading="lazy">
+
+            </div>
+            <div class="gallery-overlay">
+                <h3 class="gallery-title">Journées Informatiques</h3>
+                <p>Échanges et opportunités professionnelles plus orientations à nos CP</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <!-- Info Clouds Section -->
+    <section class="clouds-section">
+        <div class="section-header">
+            <h2 class="section-title">Notre ADN</h2>
+            <p class="section-subtitle">Ce qui fait la force du Club GI</p>
+        </div>
+        <div class="clouds-grid">
+            <div class="cloud-card">
+                <div class="cloud-icon">
+                    <i class="bi bi-trophy-fill"></i>
+                </div>
+                <h3 class="cloud-title">Excellence</h3>
+                <p class="cloud-description">
+                    Nous visons l'excellence dans tous nos projets et activités, en encourageant l'innovation et la créativité.
+                </p>
+            </div>
+            <div class="cloud-card">
+                <div class="cloud-icon">
+                    <i class="bi bi-heart-fill"></i>
+                </div>
+                <h3 class="cloud-title">Communauté</h3>
+                <p class="cloud-description">
+                    Une famille soudée où chaque membre contribue et grandit ensemble dans un esprit d'entraide et de partage.
+                </p>
+            </div>
+            <div class="cloud-card">
+                <div class="cloud-icon">
+                    <i class="bi bi-lightbulb-fill"></i>
+                </div>
+                <h3 class="cloud-title">Innovation</h3>
+                <p class="cloud-description">
+                    Nous embrassons les nouvelles technologies et encourageons la pensée créative pour résoudre les défis.
+                </p>
+            </div>
+            <div class="cloud-card">
+                <div class="cloud-icon">
+                    <i class="bi bi-rocket-takeoff-fill"></i>
+                </div>
+                <h3 class="cloud-title">Ambition</h3>
+                <p class="cloud-description">
+                    Des objectifs ambitieux qui nous poussent à dépasser nos limites et à atteindre de nouveaux sommets.
+                </p>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Smooth scroll animation for navigation
+    document.querySelectorAll('.nav-item-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            document.querySelectorAll('.nav-item-link').forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+
+    // Add parallax effect to welcome section
+    window.addEventListener('scroll', function() {
+        const welcomeSection = document.querySelector('.welcome-section');
+        const scrolled = window.pageYOffset;
+        welcomeSection.style.transform = `translateY(${scrolled * 0.3}px)`;
+    });
+
+    // Animate stats on scroll
+    const observerOptions = {
+        threshold: 0.5,
+        rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.stat-card, .cloud-card, .gallery-item').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'all 0.6s ease';
+        observer.observe(el);
+    });
+</script>
+{% endblock %}

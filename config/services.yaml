@@ -1,0 +1,27 @@
+# config/services.yaml
+parameters:
+    # Paramètres optionnels
+    # app.sender_email: 'noreply@clubgi.com'
+
+services:
+    # Configuration par défaut
+    _defaults:
+        autowire: true      # Injection automatique des dépendances
+        autoconfigure: true # Configuration automatique
+
+    # Tous les services dans src/
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+
+    # Alias pour compatibilité
+    Symfony\Component\HttpFoundation\Session\SessionInterface:
+        alias: session
+        public: true
+
+    session:
+        alias: session.storage.factory
+        public: true

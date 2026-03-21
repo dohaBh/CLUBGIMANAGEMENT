@@ -1,0 +1,236 @@
+app_cellule_new:
+    path: /new
+    controller: App\Controller\CelluleController::new
+    methods: ['GET', 'POST']
+
+app_profile :
+    path: /profil
+    controller: App\Controller\ProfileController::index
+    methods: [GET]
+
+app_profile_edit :
+    path: /profil/edit
+    controller: App\Controller\ProfileController::edit
+    methods: [GET, POST]
+
+app_register:
+    path: /register
+    controller: App\Controller\RegistrationController::register
+    methods: [GET, POST]
+
+app_verification_pending:
+    path: /verification-pending
+    controller: App\Controller\RegistrationController::verificationPending
+    methods: [GET]
+
+app_verify_email:
+    path: /verify-email/{token}
+    controller: App\Controller\RegistrationController::verifyEmail
+    methods: [GET]
+
+app_home:
+    path: /home
+    controller: App\Controller\HomeController::index
+    methods: [GET]
+
+app_dashboard:
+    path: /dashboard
+    controller: App\Controller\DashboardController::index
+    methods: [GET]
+
+app_root:
+    path: /
+    controller: App\Controller\HomeController::index
+    methods: [GET]
+
+# Routes admin
+admin_dashboard:
+    path: /admin/dashboard
+    controller: App\Controller\AdminController::dashboard
+    methods: [GET]
+
+admin_pending_users:
+    path: /admin/utilisateurs-en-attente
+    controller: App\Controller\AdminController::utilisateursEnAttente
+    methods: [GET]
+
+admin_user_approve:
+    path: /admin/utilisateur/{id}/approuver
+    controller: App\Controller\AdminController::approuverUtilisateur
+    methods: [GET, POST]
+
+admin_user_reject:
+    path: /admin/utilisateur/{id}/refuser
+    controller: App\Controller\AdminController::refuserUtilisateur
+    methods: [POST]
+
+# Routes de test (à supprimer après)
+app_test_email:
+    path: /test-email
+    controller: App\Controller\TestEmailController::testEmail
+    methods: [GET]
+
+app_test_simple:
+    path: /test-simple
+    controller: App\Controller\TestEmailController::testSimple
+    methods: [GET]
+
+# Routes Login
+app_login:
+    path: /login
+    controller: App\Controller\LoginController::login
+    methods: [GET, POST]
+
+app_logout:
+    path: /logout
+    controller: App\Controller\LoginController::logout
+    methods: [GET]
+
+# Routes formation, event, about
+app_formation:
+    path: /formation
+    controller: App\Controller\FormationController::index
+    methods: [GET, POST]
+
+app_event:
+    path: /event
+    controller: App\Controller\EventController::index
+    methods: [GET, POST]
+
+app_about:
+    path: /about
+    controller: App\Controller\AboutController::index
+    methods: [GET, POST]
+
+# Routes Equipe
+app_equipe:
+    path: /equipe
+    controller: App\Controller\EquipeController::index
+    methods: [GET, POST]
+
+equipe_responsable:
+    path: /equipe/responsable
+    controller: App\Controller\EquipeController::responsableView
+    methods: GET
+    
+equipe_membre:
+    path: /equipe/membre
+    controller: App\Controller\EquipeController::membreView
+    methods: GET
+    
+app_demande_accepter:
+    path: /equipe/demande/{id}/accepter
+    controller: App\Controller\EquipeController::accepterDemande
+    methods: GET
+    
+app_demande_refuser:
+    path: /equipe/demande/{id}/refuser
+    controller: App\Controller\EquipeController::refuserDemande
+    methods: GET
+    
+app_demande_details:
+    path: /equipe/demande/{id}/details
+    controller: App\Controller\EquipeController::detailsDemande
+    methods: GET
+
+# NOUVELLE ROUTE : Suppression d'un membre
+app_membre_supprimer:
+    path: /equipe/membre/{id}/supprimer
+    controller: App\Controller\EquipeController::supprimerMembre
+    methods: [POST]
+
+app_clear_historique:
+    path: /equipe/clear-historique
+    controller: App\Controller\EquipeController::clearHistorique
+    methods: [POST]
+
+
+# Routes des Formations
+app_formations_index:
+    path: /formations
+    controller: App\Controller\FormationController::index
+    methods: GET
+    
+app_formations_new:
+    path: /formations/new
+    controller: App\Controller\FormationController::new
+    methods: [GET, POST]
+
+app_formations_pending:
+    path: /formations/pending
+    controller: App\Controller\FormationController::pending
+    methods: GET
+    
+app_formations_show:
+    path: /formations/{id}
+    controller: App\Controller\FormationController::show
+    methods: GET
+    
+app_formations_edit:
+    path: /formations/{id}/edit
+    controller: App\Controller\FormationController::edit
+    methods: [GET, POST]
+    
+app_formations_delete:
+    path: /formations/{id}/delete
+    controller: App\Controller\FormationController::delete
+    methods: POST
+    
+app_formations_approve:
+    path: /formations/{id}/approve
+    controller: App\Controller\FormationController::approve
+    methods: POST
+    
+app_formations_reject:
+    path: /formations/{id}/reject
+    controller: App\Controller\FormationController::reject
+    methods: POST
+    
+app_formations_inscrire:
+    path: /formations/{id}/inscrire
+    controller: App\Controller\FormationController::inscrire
+    methods: POST
+    
+app_formations_desinscrire:
+    path: /formations/{id}/desinscrire
+    controller: App\Controller\FormationController::desinscrire
+    methods: POST
+    
+app_formations_participants:
+    path: /formations/{id}/participants
+    controller: App\Controller\FormationController::participants
+    methods: GET
+
+
+    # ========================================
+# 🎉 ROUTES DES ÉVÉNEMENTS (À AJOUTER)
+# ========================================
+
+# Liste des événements (accessible à tous)
+app_event_index:
+    path: /event
+    controller: App\Controller\EventController::index
+    methods: [GET]
+
+# Créer un nouvel événement (responsables uniquement)
+app_event_new:
+    path: /event/new
+    controller: App\Controller\EventController::new
+    methods: [GET, POST]
+
+# Modifier un événement (responsables uniquement)
+app_event_edit:
+    path: /event/{id}/edit
+    controller: App\Controller\EventController::edit
+    methods: [GET, POST]
+    requirements:
+        id: '\d+'
+
+# Supprimer un événement (responsables uniquement)
+app_event_delete:
+    path: /event/{id}/delete
+    controller: App\Controller\EventController::delete
+    methods: [GET]
+    requirements:
+        id: '\d+'
+

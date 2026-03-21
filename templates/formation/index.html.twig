@@ -1,0 +1,173 @@
+{% extends 'baseDash.html.twig' %}
+
+{% block title %}Formations{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h1 class="h2 mb-0">
+                <i class="fas fa-graduation-cap me-2"></i>
+                Formations
+            </h1>
+            <p class="text-muted">Découvrez et inscrivez-vous aux formations disponibles</p>
+        </div>
+        <div class="col-md-6 text-end">
+            {% if app.session.get('user') and (app.session.get('user').isPilotage or 'ROLE_RESPONSABLE' in app.session.get('user').roles) %}
+                <div class="dropdown d-inline">
+                    <button class="btn btn-outline-primary dropdown-toggle" type="button" 
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-bars "></i> Ajouter et Accepter Fromation 
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" href="{{ path('app_formations_new') }}">
+                                <i class="fas fa-plus me-2"></i> Ajouter une formation
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ path('app_formations_pending') }}">
+                                <i class="fas fa-clock me-2"></i> Formations en attente
+                                {% if pendingCount > 0 %}
+                                    <span class="badge bg-danger float-end">{{ pendingCount }}</span>
+                                {% endif %}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            {% elseif app.session.get('user') %}
+                <a href="{{ path('app_formations_new') }}" class="btn btn-warning ">
+                    <i class="fas fa-plus me-1"></i> Proposer une formation
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if formations|length > 0 %}
+        <div class="row g-4">
+            {% for formation in formations %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm hover-shadow">
+                        <!-- Image -->
+                            <div class="bg-light text-center py-5" style="height: 200px;">
+                                <i class="fas fa-graduation-cap fa-4x text-muted"></i>
+                            </div>
+
+                        <div class="card-body d-flex flex-column">
+                            <!-- Statut et badge d'approbation -->
+                            <div class="mb-2">
+                                {% if formation.statutFormation.value == 'planifiee' %}
+                                    <span class="badge bg-primary">{{ formation.statutFormation.value }}</span>
+                                {% elseif formation.statutFormation.value == 'en_cours' %}
+                                    <span class="badge bg-warning text-dark">{{ formation.statutFormation.value }}</span>
+                                {% elseif formation.statutFormation.value == 'terminee' %}
+                                    <span class="badge bg-success">{{ formation.statutFormation.value }}</span>
+                                {% else %}
+                                    <span class="badge bg-danger">{{ formation.statutFormation.value }}</span>
+                                {% endif %}
+                                
+                                {% if not formation.isApproved %}
+                                    <span class="badge bg-warning text-dark">
+                                        <i class="fas fa-clock me-1"></i> En attente
+                                    </span>
+                                {% endif %}
+                            </div>
+
+                            <h5 class="card-title">{{ formation.titre }}</h5>
+                            <p class="text-muted mb-2">
+                                <i class="fas fa-book me-1"></i> {{ formation.module }}
+                            </p>
+                            <p class="card-text flex-grow-1">
+                                {{ formation.description|slice(0, 100) }}{% if formation.description|length > 100 %}...{% endif %}
+                            </p>
+
+                            <!-- Informations -->
+                            <div class="mb-3">
+                                <p class="mb-1">
+                                    <i class="fas fa-calendar text-primary me-2"></i>
+                                    <small>{{ formation.date|date('d/m/Y') }}</small>
+                                </p>
+                                <p class="mb-1">
+                                    <i class="fas fa-map-marker-alt text-danger me-2"></i>
+                                    <small>{{ formation.lieu }}</small>
+                                </p>
+                                <p class="mb-1">
+                                    <i class="fas fa-users text-success me-2"></i>
+                                    <small>
+                                        {{ formation.participants|length }} participant(s)
+                                        {% if formation.nbParticipants %}
+                                            / {{ formation.nbParticipants }}
+                                        {% endif %}
+                                    </small>
+                                </p>
+                                {% if formation.formateurs|length > 0 %}
+                                    <p class="mb-1">
+                                        <i class="fas fa-chalkboard-teacher text-info me-2"></i>
+                                        <small>{{ formation.formateurs|length }} formateur(s)</small>
+                                    </p>
+                                {% endif %}
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="d-flex gap-2">
+                                <a href="{{ path('app_formations_show', {'id': formation.id}) }}" 
+                                   class="btn btn-sm btn-outline-primary flex-grow-1">
+                                    <i class="fas fa-eye me-1"></i> Détails
+                                </a>
+                                
+                                {% if app.session.get('user') %}
+                                    {% if formation.participants.contains(app.session.get('user')) %}
+                                        <span class="badge bg-success align-self-center">
+                                            <i class="fas fa-check"></i> Inscrit
+                                        </span>
+                                    {% elseif formation.statutFormation.value == 'planifee' and formation.isApproved %}
+                                        <form method="post" action="{{ path('app_formations_inscrire', {'id': formation.id}) }}" 
+                                              class="flex-grow-1">
+                                            <button type="submit" class="btn btn-sm btn-success w-100"
+                                                    {% if formation.nbParticipants > 0 and formation.participants|length >= formation.nbParticipants %}
+                                                        disabled
+                                                    {% endif %}>
+                                                <i class="fas fa-sign-in-alt me-1"></i> S'inscrire
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Footer de la carte pour le créateur -->
+                        {% if not formation.isApproved %}
+                            <div class="card-footer bg-warning bg-opacity-10">
+                                <small class="text-muted">
+                                    <i class="fas fa-user me-1"></i>
+                                    Proposée par {{ formation.createdBy.prenom }} {{ formation.createdBy.nom }}
+                                </small>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>
+            Aucune formation disponible pour le moment.
+            {% if app.session.get('user') %}
+                <a href="{{ path('app_formations_new') }}" class="alert-link">Proposez-en une !</a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
+<style>
+.hover-shadow {
+    transition: box-shadow 0.3s ease;
+}
+.hover-shadow:hover {
+    box-shadow: 0 0.5rem 1rem rgba(133, 135, 28, 0.15) !important;
+}
+.doreBack {
+    background : #FFD700; 
+}
+</style>
+{% endblock %}

@@ -1,0 +1,138 @@
+{% extends 'baseDash.html.twig' %}
+
+{% block title %}Détails Formation - {{ formation.titre }}{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-graduation-cap me-2"></i>
+                        Détails de la formation
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Image -->
+                        <div class="col-md-4 mb-4">
+                                <div class="text-center py-5 bg-light rounded">
+                                    <i class="fas fa-graduation-cap fa-5x text-muted"></i>
+                                </div>
+                        </div>
+                        
+                        <!-- Informations -->
+                        <div class="col-md-8">
+                            <h3 class="mb-3">{{ formation.titre }}</h3>
+                            
+                            <!-- Statut -->
+                            <div class="mb-3">
+                                {% if formation.statutFormation.value == 'Planifiée' %}
+                                    <span class="badge bg-primary fs-6">{{ formation.statutFormation.value }}</span>
+                                {% elseif formation.statutFormation.value == 'En cours' %}
+                                    <span class="badge bg-warning fs-6">{{ formation.statutFormation.value }}</span>
+                                {% elseif formation.statutFormation.value == 'Terminée' %}
+                                    <span class="badge bg-success fs-6">{{ formation.statutFormation.value }}</span>
+                                {% else %}
+                                    <span class="badge bg-danger fs-6">{{ formation.statutFormation.value }}</span>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Module -->
+                            <div class="mb-3">
+                                <h6 class="text-muted">Module</h6>
+                                <p class="fs-5">{{ formation.module }}</p>
+                            </div>
+                            
+                            <!-- Description -->
+                            <div class="mb-4">
+                                <h6 class="text-muted">Description</h6>
+                                <p>{{ formation.description|nl2br }}</p>
+                            </div>
+                            
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <h6 class="text-muted">Date</h6>
+                                    <p><i class="fas fa-calendar me-2"></i> {{ formation.date|date('d/m/Y') }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="text-muted">Lieu</h6>
+                                    <p><i class="fas fa-map-marker-alt me-2"></i> {{ formation.lieu }}</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Formateurs -->
+                            <div class="mb-4">
+                                <h6 class="text-muted">Formateurs</h6>
+                                {% if formation.formateurs|length > 0 %}
+                                    <div class="d-flex flex-wrap gap-2">
+                                        {% for formateur in formation.formateurs %}
+                                            <span class="badge bg-secondary fs-6 p-2">
+                                                <i class="fas fa-user me-1"></i>
+                                                {{ formateur.prenom }} {{ formateur.nom }}
+                                            </span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <p class="text-muted">Aucun formateur assigné</p>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- nb Participants -->
+                            <div class="mb-4">
+                                <h6 class="text-muted">Participants</h6>
+                                <p>
+                                    <i class="fas fa-users me-2"></i>
+                                    {{ formation.participants|length }} participant(s)
+                                    {% if formation.nbParticipants %}
+                                        (Limite: {{ formation.nbParticipants }})
+                                    {% endif %}
+                                </p>
+                            </div>
+							<a href="{{ path('app_formations_participants' , {'id': formation.id}) }}" class=".btn-info">
+                            	<i class="fas fa-arrow-left me-1"></i> Voir liste des participants
+                        	</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Actions -->
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{{ path('app_formations_index') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-1"></i> Retour à la liste
+                        </a>
+
+                        <div>
+							{# Bouton Se désinscrire #}
+							<form method="post" action="{{ path('app_formations_desinscrire', {'id': formation.id}) }}" 
+								style="display: inline;"
+								onsubmit="return confirm('Êtes-vous sûr de vouloir vous désinscrire de cette formation ?')">
+								<input type="hidden" name="_token" value="{{ csrf_token('desinscrire' ~ formation.id) }}">
+								<button type="submit" class="btn btn-danger">
+									<i class="fas fa-sign-out-alt me-1"></i> Se désinscrire
+								</button>
+							</form>
+                            
+                            <!-- Boutons Éditer/Supprimer pour responsables -->
+                            {% if app.session.get('user') and (app.session.get('user').isPilotage or 'ROLE_RESPONSABLE' in app.session.get('user').roles) %}
+                                <a href="{{ path('app_formations_edit', {'id': formation.id}) }}" 
+                                   class="btn btn-warning">
+                                    <i class="fas fa-edit me-1"></i> Éditer
+                                </a>
+                                <form method="post" action="{{ path('app_formations_delete', {'id': formation.id}) }}" 
+                                      onsubmit="return confirm('Supprimer cette formation ?')" 
+                                      style="display: inline;">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ formation.id) }}">
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="fas fa-trash me-1"></i> Supprimer
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

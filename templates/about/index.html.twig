@@ -1,0 +1,721 @@
+{% extends 'baseDash.html.twig' %}
+
+{% block title %}Loi Interne du Club{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /* Variables de couleurs */
+        :root {
+            --gold: #d4af37;
+            --gold-light: #f8e473;
+            --gold-dark: #b8860b;
+            --dark: #0d1117;
+            --darker: #010409;
+            --light: #c9d1d9;
+            --gray: #8b949e;
+            --card-bg: rgba(13, 17, 23, 0.8);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Container principal */
+        .law-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        /* Header avec effet doré */
+        .law-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px 0;
+            background: linear-gradient(135deg, rgba(13, 17, 23, 0.9) 0%, rgba(25, 33, 47, 0.9) 100%);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .law-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gold), #ffd700, var(--gold));
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite linear;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .law-title {
+            font-size: 42px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            text-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+        }
+
+        .law-subtitle {
+            color: var(--gray);
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Sélection de chapitres */
+        .chapters-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 40px;
+            padding: 25px;
+            background: var(--card-bg);
+            border-radius: 15px;
+            border: 1px solid var(--border);
+        }
+
+        .chapter-btn {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--light);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .chapter-btn:hover {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: var(--gold);
+            transform: translateY(-2px);
+        }
+
+        .chapter-btn.active {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            border-color: var(--gold);
+            color: var(--darker);
+            font-weight: 600;
+        }
+
+        /* Sections d'articles */
+        .articles-section {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            color: var(--gold);
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-icon {
+            width: 32px;
+            height: 32px;
+            color: var(--gold);
+        }
+
+        /* Grid d'articles */
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        /* Cartes d'article */
+        .article-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            border-color: var(--gold);
+        }
+
+        .article-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .article-card:hover::before {
+            opacity: 1;
+        }
+
+        .article-number {
+            display: inline-block;
+            padding: 8px 16px;
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--gold);
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .article-title {
+            font-size: 20px;
+            color: var(--light);
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .article-content {
+            color: var(--gray);
+            line-height: 1.7;
+            font-size: 15px;
+        }
+
+        /* Section des principes fondamentaux */
+        .principles-section {
+            background: linear-gradient(135deg, rgba(13, 17, 23, 0.9) 0%, rgba(25, 33, 47, 0.9) 100%);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 60px;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .principles-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.03"><path d="M50,0 C77.614,0 100,22.386 100,50 C100,77.614 77.614,100 50,100 C22.386,100 0,77.614 0,50 C0,22.386 22.386,0 50,0 Z" fill="%23d4af37"/></svg>') repeat;
+            background-size: 40px;
+        }
+
+        .principles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .principle-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .principle-item:hover {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: var(--gold);
+            transform: scale(1.05);
+        }
+
+        .principle-icon {
+            width: 48px;
+            height: 48px;
+            color: var(--gold);
+            margin-bottom: 15px;
+            display: block;
+            margin: 0 auto 15px;
+        }
+
+        .principle-title {
+            color: var(--gold);
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .principle-desc {
+            color: var(--gray);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Section de signature */
+        .signature-section {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 40px;
+            border: 1px solid var(--border);
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .signature-title {
+            color: var(--gold);
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+
+        .signatures-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .signature-item {
+            padding: 20px;
+        }
+
+        .signature-name {
+            color: var(--light);
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .signature-role {
+            color: var(--gold);
+            font-size: 14px;
+        }
+
+        .signature-line {
+            height: 2px;
+            background: rgba(212, 175, 55, 0.3);
+            margin: 15px 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .law-title {
+                font-size: 32px;
+            }
+            
+            .articles-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .principles-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chapters-nav {
+                flex-direction: column;
+            }
+            
+            .chapter-btn {
+                text-align: center;
+            }
+        }
+
+        /* Effet de scroll */
+        .article-card {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+
+        .article-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="law-container">
+    <!-- Header avec titre -->
+    <div class="law-header">
+        <h1 class="law-title">Loi Interne du Club GI</h1>
+        <p class="law-subtitle">Règlement intérieur régissant le fonctionnement, les droits et les devoirs des membres du Club Génie Informatique</p>
+    </div>
+
+    <!-- Navigation par chapitres -->
+    <nav class="chapters-nav">
+        <a href="#constitution" class="chapter-btn active">Constitution</a>
+        <a href="#membres" class="chapter-btn">Membres</a>
+        <a href="#organisation" class="chapter-btn">Organisation</a>
+        <a href="#droits" class="chapter-btn">Droits & Devoirs</a>
+        <a href="#activites" class="chapter-btn">Activités</a>
+    </nav>
+
+    <!-- Section 1: Constitution et Objet -->
+    <section id="constitution" class="articles-section">
+        <h2 class="section-title">
+            <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+            </svg>
+            Constitution et Objet
+        </h2>
+        
+        <div class="articles-grid">
+            <div class="article-card">
+                <div class="article-number">Article 1</div>
+                <h3 class="article-title">Constitution et Dénomination</h3>
+                <div class="article-content">
+                    Le Club Génie Informatique (Club GI) est né d'une vision simple mais profonde : créer un espace où les étudiants en informatique peuvent grandir ensemble, s'entraider et exceller collectivement. Fondé par un groupe passionné d'étudiants en 2023, notre club est le fruit de la conviction que la collaboration dépasse largement la compétition solitaire.
+                </div>
+            </div>
+
+            <div class="article-card">
+                <div class="article-number">Article 2</div>
+                <h3 class="article-title">Objet Social</h3>
+                <div class="article-content">
+                    Le club a pour missions :<br><br>
+                    • Promouvoir l'excellence académique et professionnelle<br>
+                    • Organiser des événements techniques et scientifiques<br>
+                    • Faciliter les échanges étudiants-professionnels<br>
+                    • Développer les compétences pratiques des membres<br>
+                    • Favoriser l'innovation et la recherche
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: Membres -->
+    <section id="membres" class="articles-section">
+        <h2 class="section-title">
+            <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+            </svg>
+            Membres et Adhésion
+        </h2>
+        
+        <div class="articles-grid">
+            <div class="article-card">
+                <div class="article-number">Article 4</div>
+                <h3 class="article-title">Catégories de Membres</h3>
+                <div class="article-content">
+                    <strong>a) Membres Actifs :</strong> Étudiants inscrits en Génie Informatique<br>
+                    <strong>b) Membres Associés :</strong> Anciens étudiants et enseignants<br>
+                    <strong>c) Membres d'Honneur :</strong> Personnalités émérites<br>
+                    <strong>d) Membres Bienfaiteurs :</strong> Partenaires et sponsors
+                </div>
+            </div>
+
+            <div class="article-card">
+                <div class="article-number">Article 5</div>
+                <h3 class="article-title">Conditions d'Adhésion</h3>
+                <div class="article-content">
+                    Pour devenir membre, il faut :<br><br>
+                    1. Être étudiant en Génie Informatique<br>
+                    2. Adhérer aux statuts et règlement intérieur<br>
+                    3. S'acquitter de la cotisation annuelle<br>
+                    5. Être agréé par le comité d'admission
+                </div>
+            </div>
+
+            <div class="article-card">
+                <div class="article-number">Article 6</div>
+                <h3 class="article-title">Cotisations</h3>
+                <div class="article-content">
+                    Le montant des cotisations est fixé annuellement par l'Assemblée Générale. Les cotisations sont :<br />
+                    •  100 MAD/an<br>
+                    •  50 MAD/mois<br>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Organisation -->
+    <section id="organisation" class="articles-section">
+        <h2 class="section-title">
+            <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+            </svg>
+            Organisation et Gouvernance
+        </h2>
+        
+        <div class="articles-grid">
+            <div class="article-card">
+                <div class="article-number">Article 7</div>
+                <h3 class="article-title">Bureau Exécutif</h3>
+               <div class="article-content">
+                    Composé de :<br><br>
+                    • Responsable Formation <br>
+                    • Responsable Sponsoring <br>
+                    • Responsable Design <br>
+                    • Responsable Communication <br>
+                    Mandat : 1 an, renouvelable une fois
+                </div>
+            </div>
+
+            <div class="article-card">
+                <div class="article-number">Article 8</div>
+                <h3 class="article-title">Pilotage Exécutif</h3>
+                <div class="article-content">
+                    Composé de :<br><br>
+                    • Président(e)<br>
+                    • Vice-président(e)<br>
+                    • Secrétaire général(e)<br>
+                    • Trésorier(e)<br>
+                    Mandat : 1 an, renouvelable une fois
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4: Principes fondamentaux -->
+    <div class="principles-section">
+        <h2 style="color: var(--gold); text-align: center; font-size: 32px; margin-bottom: 40px;">
+            Principes Fondamentaux
+        </h2>
+        
+        <div class="principles-grid">
+            <div class="principle-item">
+                <svg class="principle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <h3 class="principle-title">Intégrité</h3>
+                <p class="principle-desc">Respect des règles éthiques et déontologiques dans toutes nos actions</p>
+            </div>
+
+            <div class="principle-item">
+                <svg class="principle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+                <h3 class="principle-title">Collaboration</h3>
+                <p class="principle-desc">Travail d'équipe et partage des connaissances entre tous les membres</p>
+            </div>
+
+            <div class="principle-item">
+                <svg class="principle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+                <h3 class="principle-title">Innovation</h3>
+                <p class="principle-desc">Encouragement constant à la créativité et à l'innovation technologique</p>
+            </div>
+
+            <div class="principle-item">
+                <svg class="principle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+                <h3 class="principle-title">Professionnalisme</h3>
+                <p class="principle-desc">Excellence dans l'exécution des projets et responsabilité des engagements</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 5: Droits et Devoirs -->
+    <section id="droits" class="articles-section">
+        <h2 class="section-title">
+            <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+            Droits et Devoirs des Membres
+        </h2>
+        
+        <div class="articles-grid">
+            <div class="article-card">
+                <div class="article-number">Article 10</div>
+                <h3 class="article-title">Droits des Membres</h3>
+                <div class="article-content">
+                    Tout membre a droit à :<br><br>
+                    • Participation aux activités du club<br>
+                    • Utilisation des ressources du club<br>
+                    • Droit de vote à l'Assemblée Générale<br>
+                    • Éligibilité aux postes électifs<br>
+                    • Formation et accompagnement<br>
+                    • Certificat de participation
+                </div>
+            </div>
+
+            <div class="article-card">
+                <div class="article-number">Article 11</div>
+                <h3 class="article-title">Devoirs des Membres</h3>
+                <div class="article-content">
+                    Tout membre doit :<br><br>
+                    • Respecter les statuts et règlements<br>
+                    • Payer la cotisation annuelle<br>
+                    • Participer aux activités<br>
+                    • Respecter les autres membres<br>
+                    • Représenter dignement le club<br>
+                    • Contribuer au développement du club
+                </div>
+            </div>
+
+            <div class="article-card">
+                <div class="article-number">Article 12</div>
+                <h3 class="article-title">Sanctions</h3>
+                <div class="article-content">
+                    En cas de manquement aux devoirs :<br><br>
+                    1. Avertissement écrit<br>
+                    2. Suspension temporaire<br>
+                    3. Exclusion définitive<br>
+                    <br>
+                    L'exclusion est prononcée par l'Assemblée Générale à la majorité des 2/3.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 6: Activités -->
+    <section id="activites" class="articles-section">
+        <h2 class="section-title">
+            <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+            Activités et Événements
+        </h2>
+        
+        <div class="articles-grid">
+            <div class="article-card">
+                <div class="article-number">Article 13</div>
+                <h3 class="article-title">Types d'Activités</h3>
+                <div class="article-content">
+                    Le club organise :<br><br>
+                    • Workshops techniques<br>
+                    • Conférences et séminaires<br>
+                    • Compétitions de programmation<br>
+                    • Visites d'entreprises<br>
+                    • Projets de développement<br>
+                    • Activités de networking<br>
+                    • Événements sociaux
+                </div>
+            </div>
+
+            <div class="article-card">
+                <div class="article-number">Article 14</div>
+                <h3 class="article-title">Organisation des Événements</h3>
+                <div class="article-content">
+                    Toute activité doit être :<br><br>
+                    1. Proposée par une cellule<br>
+                    2. Validée par le bureau<br>
+                    3. Planifiée avec budget<br>
+                    4. Communiquée aux membres<br>
+                    5. Évaluée après réalisation<br>
+                    6. Documentée dans les archives
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+<div class="signature-section">
+        <h4 style="color: var(--gold); text-align: center; margin-bottom: 25px; font-size: 22px;">
+            <svg style="width: 24px; height: 24px; display: inline-block; vertical-align: middle; margin-right: 10px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89-4.26a2 2 0 012.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+            Contactez-nous !
+        </h4>
+    <!-- Section des contacts -->
+    <div class="contact-section" style="margin-top: 50px; padding-top: 30px; border-top: 1px solid var(--border);">
+
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; margin-top: 20px;">
+            <!-- Email -->
+            <div class="contact-item" style="text-align: center; padding: 20px; background: rgba(255, 255, 255, 0.03); border-radius: 10px; border: 1px solid var(--border); transition: all 0.3s ease;">
+                <svg style="width: 24px; height: 24px; color: var(--gold); margin-bottom: 10px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89-4.26a2 2 0 012.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+                <div style="color: var(--light); font-weight: 600; margin-bottom: 5px;">Email</div>
+                <a href="mailto:club.gi@university.edu" style="color: var(--gold); text-decoration: none; font-size: 16px; transition: all 0.3s ease;">genieinformatique.club1@gmail.com</a>
+            </div>
+            
+            <!-- Téléphone -->
+            <div class="contact-item" style="text-align: center; padding: 20px; background: rgba(255, 255, 255, 0.03); border-radius: 10px; border: 1px solid var(--border); transition: all 0.3s ease;">
+                <svg style="width: 24px; height: 24px; color: var(--gold); margin-bottom: 10px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                </svg>
+                <div style="color: var(--light); font-weight: 600; margin-bottom: 5px;">Téléphone</div>
+                <a href="tel:+213123456789" style="color: var(--gold); text-decoration: none; font-size: 16px; transition: all 0.3s ease;">+213 123 456 789</a>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+
+<script>
+    // Animation au scroll
+    document.addEventListener('DOMContentLoaded', function() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        document.querySelectorAll('.article-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // Navigation smooth scroll
+        document.querySelectorAll('.chapter-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Retirer la classe active de tous les boutons
+                document.querySelectorAll('.chapter-btn').forEach(b => {
+                    b.classList.remove('active');
+                });
+                
+                // Ajouter la classe active au bouton cliqué
+                this.classList.add('active');
+                
+                // Scroll vers la section
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                
+                if (targetSection) {
+                    window.scrollTo({
+                        top: targetSection.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Mettre à jour le bouton actif au scroll
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('section');
+            const navButtons = document.querySelectorAll('.chapter-btn');
+            
+            let currentSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionHeight = section.clientHeight;
+                
+                if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+                    currentSection = '#' + section.getAttribute('id');
+                }
+            });
+            
+            navButtons.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('href') === currentSection) {
+                    btn.classList.add('active');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

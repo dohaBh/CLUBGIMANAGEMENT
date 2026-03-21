@@ -1,0 +1,59 @@
+
+        .verification-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 40px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .verification-icon {
+            font-size: 4rem;
+            color: #2c5282;
+            margin-bottom: 20px;
+        }
+        
+        .verification-header {
+            color: #2c5282;
+            margin-bottom: 20px;
+        }
+        
+        .verification-message {
+            color: #718096;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        
+        .verification-steps {
+            text-align: left;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 10px;
+        }
+        
+        .verification-steps li {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .verification-steps i {
+            color: #c6a34e;
+            margin-right: 10px;
+        }
+        
+        .btn-retry {
+            background: linear-gradient(135deg, #2c5282 0%, #4a6580 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }

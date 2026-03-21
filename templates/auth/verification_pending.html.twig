@@ -1,0 +1,44 @@
+{# templates/auth/verification_pending.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Vérification en cours{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {# CORRECTION : lien CSS correct, pas de <script> dans <style> #}
+    <link rel="stylesheet" href="{{ asset('css/verification.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div class="verification-container">
+        <div class="verification-icon">
+            <i class="fas fa-envelope-open-text"></i>
+        </div>
+        
+        <h1 class="verification-header">Vérifiez votre email</h1>
+        
+        <p class="verification-message">
+            Un email de vérification a été envoyé à votre adresse. 
+            Veuillez cliquer sur le lien dans l'email pour activer votre compte.
+        </p>
+        
+        <div class="verification-steps">
+            <h3>Instructions :</h3>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> Vérifiez votre boîte de réception</li>
+                <li><i class="fas fa-check-circle"></i> Cherchez l'email de notre plateforme</li>
+                <li><i class="fas fa-check-circle"></i> Cliquez sur le lien de vérification</li>
+                <li><i class="fas fa-check-circle"></i> Revenez vous connecter</li>
+            </ul>
+        </div>
+        
+        <p>
+            <small>Si vous n'avez pas reçu l'email, vérifiez vos spams ou 
+            <a href="{{ path('app_register') }}">réessayez l'inscription</a>.</small>
+        </p>
+        
+        <a href="{{ path('app_login') }}" class="btn-retry">
+            <i class="fas fa-sign-in-alt"></i> Retour à la connexion
+        </a>
+    </div>
+{% endblock %}

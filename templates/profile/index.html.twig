@@ -1,0 +1,143 @@
+{% extends 'baseDash.html.twig' %}
+
+{% block title %}Mon Profil - {{ user.prenom }} {{ user.nom }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/profile.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="profile-container">
+    <!-- Header avec avatar et informations principales -->
+    <div class="profile-header">
+        <div class="profile-avatar-large">
+            <div class="avatar-circle">
+                {{ user.prenom|first|upper }}{{ user.nom|first|upper }}
+            </div>
+            <div class="avatar-glow"></div>
+        </div>
+        
+        <div class="profile-info">
+            <h1 class="profile-name">{{ user.prenom }} {{ user.nom }}</h1>
+            <p class="profile-email">{{ user.email }}</p>
+            
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Membre depuis</span>
+                    <span class="stat-value">{{ user.dateInscription|date('d/m/Y') }}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Statut</span>
+                    <span class="stat-badge status-{{ user.statut.value }}">{{ user.statut.value }}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Niveau</span>
+                    <span class="stat-value">{{ user.niveau.value }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Boutons d'action -->
+    <div class="profile-actions">
+        <a href="{{ path('app_profile_edit') }}" class="btn-edit-profile">
+            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+            </svg>
+            Modifier mon profil
+        </a>
+    </div>
+
+    <!-- Grille d'informations -->
+    <div class="profile-grid">
+        <!-- Informations personnelles -->
+        <div class="profile-card">
+            <div class="card-header">
+                <svg class="card-icon" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+                <h3>Informations personnelles</h3>
+            </div>
+            <div class="card-content">
+                <div class="info-row">
+                    <span class="info-label">Nom complet</span>
+                    <span class="info-value">{{ user.nom }} {{ user.prenom }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Email</span>
+                    <span class="info-value">{{ user.email }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Téléphone</span>
+                    <span class="info-value">{{ user.telephone }}</span>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-label">Niveau</span>
+                    <span class="info-value badge badge-niveau">{{ user.niveau.value }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Informations du club -->
+        <div class="profile-card">
+            <div class="card-header">
+                <svg class="card-icon" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                </svg>
+                <h3>Informations du club</h3>
+            </div>
+            <div class="card-content">
+                {% if user.cellule %}
+                    <div class="info-row">
+                        <span class="info-label">Cellule</span>
+                        <span class="info-value">{{ user.cellule.nom }}</span>
+                    </div>
+                {% endif %}
+                <div class="info-row">
+                    <span class="info-label">Date d'inscription</span>
+                    <span class="info-value">{{ user.dateInscription|date('d/m/Y') }}</span>
+                </div>
+                {% if user.isPilotage %}
+                    <div class="info-row">
+                        <span class="info-label">Rôle</span>
+                        <span class="info-value badge badge-gold">Responsable</span>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Mes formations -->
+        <div class="profile-card card-wide">
+            <div class="card-header">
+                <svg class="card-icon" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                </svg>
+                <h3>Mes formations</h3>
+            </div>
+            <div class="card-content">
+                {% if user.formations is not empty or user.participantsFormation is not empty %}
+                    <div class="formations-grid">
+                        {% for formation in user.formations %}
+                            <div class="formation-item">
+                                <span class="formation-title">{{ formation.titre }}</span>
+                                <span class="formation-role badge badge-formateur">Formateur</span>
+                            </div>
+                        {% endfor %}
+                        
+                        {% for formation in user.participantsFormation %}
+                            <div class="formation-item">
+                                <span class="formation-title">{{ formation.titre }}</span>
+                                <span class="formation-role badge badge-participant">Participant</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="empty-message">Aucune formation pour le moment.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

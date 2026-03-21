@@ -1,0 +1,90 @@
+{% extends 'baseDash.html.twig' %}
+
+{% block title %}Nouvelle Cellule{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <h2>Nouvelle Cellule</h2>
+    
+    {{ form_start(form) }}
+    
+    <div class="form-group">
+        <label>Nom de la Cellule *</label>
+        {{ form_widget(form.nom, {'attr': {'class': 'form-control mb-2'}}) }}
+        {{ form_errors(form.nom) }}
+    </div>
+    
+    <div class="form-group">
+        <label>Description</label>
+        {{ form_widget(form.description, {'attr': {'class': 'form-control mb-2', 'rows': 2}}) }}
+        {{ form_errors(form.description) }}
+    </div>
+    
+    <div class="form-group">
+        <label>Responsable *</label>
+        {{ form_widget(form.responsable, {'attr': {'class': 'form-control mb-2'}}) }}
+        {{ form_errors(form.responsable) }}
+    </div>
+    
+    <div class="mt-3">
+        <button type="submit" class="btn btn-primary">Créer</button>
+        <a href="{{ path('equipe_responsable') }}" class="btn btn-link">Annuler</a>
+    </div>
+    
+    {{ form_end(form) }}
+</div>
+
+<style>
+.container {
+    max-width: 600px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.btn-primary {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.btn-link {
+    color: #666;
+    text-decoration: none;
+    margin-left: 10px;
+}
+</style>
+<script>
+// Vérification simple lors de la soumission du formulaire
+document.querySelector('#cellule-form').addEventListener('submit', function(e) {
+    // Récupérer la valeur sélectionnée
+    const responsableSelect = document.querySelector('#{{ form.responsable.vars.id }}');
+    const selectedUserId = responsableSelect.value;
+    
+    if (selectedUserId) {
+        // Faire une requête AJAX simple pour vérifier
+        fetch('/cellule/check-responsable/' + selectedUserId)
+            .then(response => response.json())
+            .then(data => {
+                if (data.isAlreadyResponsable) {
+                    // Empêcher la soumission
+                    e.preventDefault();
+                    
+                    // Afficher une simple alerte
+                    alert('⚠️ ATTENTION !\n\n' + data.message + '\n\nVeuillez choisir un autre responsable.');
+                    
+                    // Focus sur le select
+                    responsableSelect.focus();
+                }
+            });
+    }
+});
+</script>
+{% endblock %}

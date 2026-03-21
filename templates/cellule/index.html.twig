@@ -1,0 +1,50 @@
+{% extends 'baseDash.html.twig' %}
+
+{% block title %}Liste des cellules{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <h1>Liste des cellules</h1>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Responsable</th>
+                <th>Nombre de membres</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cellule in cellules %}
+                <tr>
+                    <td>{{ cellule.nom }}</td>
+                    <td>{{ cellule.responsable.nom }}</td>
+                    <td>{{ cellule.nbMembres }}</td>
+                    <td>
+                        <div class="btn-group">
+                            
+                            {% if user.isPilotage() or 'ROLE_RESPONSABLE' in user.roles %}
+                                <form method="post" 
+                                      action="{{ path('app_cellule_delete', {'id': cellule.id}) }}" 
+                                      class="d-inline"
+                                      onsubmit="return confirm('Supprimer cette cellule ?')">
+                                    <input type="hidden" name="_token" 
+                                           value="{{ csrf_token('delete' ~ cellule.id) }}">
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <a href="{{ path('equipe_responsable') }}" class="btn btn-secondary">
+        Retour au tableau de bord
+    </a>
+</div>
+{% endblock %}

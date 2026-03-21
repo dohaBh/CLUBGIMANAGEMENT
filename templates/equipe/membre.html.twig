@@ -1,0 +1,79 @@
+{% extends 'baseDash.html.twig' %}
+
+{% block title %}Équipe - Liste des membres{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h2 mb-0">Notre Équipe</h1>
+            <p class="text-muted">Liste de tous les membres du club</p>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-users me-2"></i>
+                        Membres du club ({{ allUsers|length }})
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if allUsers|length > 0 %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Nom & Prénom</th>
+                                        <th>Email</th>
+                                        <th>Téléphone</th>
+                                        <th>Cellule</th>
+                                        <th>Date d'inscription</th>
+                                        <th>Rôle</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for user in allUsers %}
+                                        <tr>
+                                            <td>
+                                                <strong>{{ user.nom }} {{ user.prenom }}</strong>
+                                                {% if user.isPilotage %}
+                                                    <span class="badge bg-warning ms-2">Responsable</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ user.email }}</td>
+                                            <td>{{ user.telephone }}</td>
+                                            <td>
+                                                {% if user.cellule %}
+                                                    <span class="badge bg-info">{{ user.cellule.nom }}</span>
+                                                {% else %}
+                                                    <span class="badge bg-secondary">Aucune</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ user.dateInscription|date('d/m/Y') }}</td>
+                                            <td>
+                                                {% if 'ROLE_RESPONSABLE' in user.roles %}
+                                                    <span class="badge bg-warning">Responsable</span>
+                                                {% else %}
+                                                    <span class="badge bg-success">Membre</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info mb-0">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Aucun membre n'est encore inscrit dans le club.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

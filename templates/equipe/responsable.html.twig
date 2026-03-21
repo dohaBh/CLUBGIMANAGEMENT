@@ -1,0 +1,433 @@
+{% extends 'baseDash.html.twig' %}
+
+{% block title %}Tableau de bord Responsable - Équipe{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+
+
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="h2 mb-0">Tableau de bord Responsable</h1>
+            <p class="text-muted">Gestion des membres et des demandes d'adhésion</p>
+        </div>
+        
+        <!-- Bouton Historique -->
+        <button type="button" class="btn btn-outline-info" 
+                data-bs-toggle="modal" 
+                data-bs-target="#historiqueModal">
+            <i class="fas fa-history me-2"></i>
+            Historique des suppressions
+            {% if app.session.get('historique_suppressions') %}
+                <span class="badge bg-danger ms-2">
+                    {{ app.session.get('historique_suppressions')|length }}
+                </span>
+                {# app - Variable globale Symfony
+                session est une propriété de l'objet app : Equivalent à $request->getSession() en PHP
+                historique_suppressions - Méthode PHP
+                .get() est une méthode PHP de l'objet Session
+                Elle prend un paramètre : le nom de la clé -> Retourne la valeur stockée ou null #}
+            {% endif %}
+        </button>
+        <div class="dropdown d-inline">
+                    <button class="btn btn-outline-primary dropdown-toggle" type="button" 
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-bars "></i> Cellule Manager
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" href="{{ path('app_cellule_new') }}">
+                                <i class="fas fa-plus me-2"></i> Ajouter une cellule
+                            </a>
+                        </li>
+                        {# <li>
+                            <a class="dropdown-item" href="{{ path('app_cellule_index') }}">
+                                <i class="fas fa-clock me-2"></i> Supprimer une cellule
+                            </a>
+                        </li> #}
+                    </ul>
+         </div>
+    </div>
+</div>
+    
+    <!-- Statistiques -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card border-primary">
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ stats.total_membres }}</h5>
+                    {# stats = Une variable passée du contrôleur PHP au template
+                    . = Opérateur d'accès aux propriétés (comme en PHP)
+                    total_membres = Une propriété/clé dans le tableau/objet stats 
+                    php : 
+                    $stats = [
+                        'total_membres' => count($allUsers),
+                        'pending_requests' => count($pendingDemandes),
+                        'responsables' => count(array_filter($allUsers, fn($u) => $u->isPilotage())),
+                        'membres' => count(array_filter($allUsers, fn($u) => !$u->isPilotage())),
+                    ];
+                    return $this->render('equipe/responsable.html.twig', [
+                        'pendingDemandes' => $pendingDemandes,
+                        'allUsers' => $allUsers,
+                        'stats' => $stats,
+                    ]);
+                    #}
+
+                    <p class="card-text">Membres totaux</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-warning">
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ stats.pending_requests }}</h5>
+                    <p class="card-text">Demandes en attente</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-success">
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ stats.responsables }}</h5>
+                    <p class="card-text">Responsables</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-info">
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ stats.membres }}</h5>
+                    <p class="card-text">Membres</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <!-- Section Pending Requests -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">
+                        <i class="fas fa-clock me-2"></i>
+                        Demandes en attente d'approbation
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if pendingDemandes|length > 0 %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Nom & Prénom</th>
+                                        <th>Email</th>
+                                        <th>Téléphone</th>
+                                        <th>Cellule demandée</th>
+                                        <th>Motivation</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for demande in pendingDemandes %}
+                                        {% set user = demande.user %}
+                                        <tr>
+                                            <td>{{ demande.dateDemande|date('d/m/Y') }}</td>
+                                            <td>
+                                                <strong>{{ user.nom }} {{ user.prenom }}</strong>
+                                            </td>
+                                            <td>{{ user.email }}</td>
+                                            <td>{{ user.telephone }}</td>
+                                            <td>
+                                                {% if demande.cellule %}
+                                                    <span class="badge bg-primary">{{ demande.cellule.nom }}</span>
+                                                {% else %}
+                                                    <span class="badge bg-secondary">Non spécifiée</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <small>{{ demande.motivation|slice(0, 50) }}{% if demande.motivation|length > 50 %}...{% endif %}</small>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group btn-group-sm">
+                                                    <a href="{{ path('app_demande_accepter', {'id': demande.id}) }}" 
+                                                       class="btn btn-success" 
+                                                       onclick="return confirm('Accepter cette demande ?')">
+                                                        <i class="fas fa-check"></i> Accepter
+                                                    </a>
+                                                    <a href="{{ path('app_demande_refuser', {'id': demande.id}) }}" 
+                                                       class="btn btn-danger" 
+                                                       onclick="return confirm('Refuser Cette Demande?')">
+                                                        <i class="fas fa-check"></i> Refuser
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info mb-0">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Aucune demande en attente.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Section Liste complète des membres -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-users me-2"></i>
+                        Liste des membres du club
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Nom & Prénom</th>
+                                    <th>Email</th>
+                                    <th>Téléphone</th>
+                                    <th>Cellule</th>
+                                    <th>Date d'inscription</th>
+                                    <th>Rôle</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in allUsers %}
+                                {# user : var temporaire pour parcourir 
+                                allUsers vient php : 
+                                Récupérer tous les utilisateurs ACTIFS du club
+                                $allUsers = $em->getRepository(User::class)->createQueryBuilder('u')
+                                    ->where('u.statut = :status')
+                                    ->setParameter('status', Statut::ACTIF)
+                                    ->orderBy('u.nom', 'ASC')
+                                    ->addOrderBy('u.prenom', 'ASC')
+                                    ->getQuery()
+                                    ->getResult(); 
+                                    #}
+                                    <tr>
+                                        <td>
+                                            <strong>{{ user.nom }} {{ user.prenom }}</strong>
+                                            {% if user.isPilotage %}
+                                                <span class="badge bg-warning ms-2">Responsable</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ user.email }}</td>
+                                        <td>{{ user.telephone }}</td>
+                                        <td>
+                                            {% if user.cellule %}
+                                                <span class="badge bg-info">{{ user.cellule.nom }}</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">Aucune</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ user.dateInscription|date('d/m/Y') }}</td>
+                                        <td>
+                                            {% if 'ROLE_RESPONSABLE' in user.roles %}
+                                                <span class="badge bg-warning">Responsable</span>
+                                            {% else %}
+                                                <span class="badge bg-success">Membre</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm">
+                                                
+                                                {# Bouton de suppression - seulement pour les membres normaux #}
+                                                {% if not user.isPilotage and 'ROLE_RESPONSABLE' not in user.roles %}
+                                                    <button type="button" class="btn btn-outline-danger" 
+                                                            data-bs-toggle="modal" 
+                                                            data-bs-target="#supprimerModal{{ user.id }}"
+                                                            title="Supprimer ce membre">
+                                                        <i class="fas fa-user-slash"></i>
+                                                    </button>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    
+                                    <!-- Modal de suppression (en dehors du tableau, à la fin du body) -->
+                                    {% if not user.isPilotage and 'ROLE_RESPONSABLE' not in user.roles %}
+                                    <div class="modal fade" id="supprimerModal{{ user.id }}" tabindex="-1">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <form method="post" action="{{ path('app_membre_supprimer', {'id': user.id}) }}">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Supprimer un membre</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="alert alert-warning">
+                                                            <i class="fas fa-exclamation-triangle me-2"></i>
+                                                            <strong>Attention :</strong> Cette action est irréversible. 
+                                                            Le membre ne pourra plus se connecter à l'application.
+                                                        </div>
+                                                        
+                                                        <p>Êtes-vous sûr de vouloir supprimer <strong>{{ user.prenom }} {{ user.nom }}</strong> ?</p>
+                                                        
+                                                        <div class="mb-3">
+                                                            <label for="raison_suppression{{ user.id }}" class="form-label">
+                                                                Raison de la suppression (obligatoire) :
+                                                            </label>
+                                                            <select class="form-select" name="raison_suppression" required>
+                                                                <option value="">Choisir une raison</option>
+                                                                <option value="Non-respect du règlement interne">Non-respect du règlement interne</option>
+                                                                <option value="Inactivité prolongée">Inactivité prolongée</option>
+                                                                <option value="Comportement inapproprié">Comportement inapproprié</option>
+                                                                <option value="Démission">Démission</option>
+                                                                <option value="Exclusion pour faute grave">Exclusion pour faute grave</option>
+                                                                <option value="Autre raison">Autre raison</option>
+                                                            </select>
+                                                        </div>
+                                                        
+                                                        <div class="mb-3">
+                                                            <label for="details_suppression{{ user.id }}" class="form-label">
+                                                                Détails supplémentaires (optionnel) :
+                                                            </label>
+                                                            <textarea class="form-control" id="details_suppression{{ user.id }}" 
+                                                                      name="details_suppression" rows="3" 
+                                                                      placeholder="Précisez les détails si nécessaire..."></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                        <button type="submit" class="btn btn-danger">Confirmer la suppression</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Historique des suppressions -->
+<div class="modal fade" id="historiqueModal" tabindex="-1" aria-labelledby="historiqueModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title" id="historiqueModalLabel">
+                    <i class="fas fa-history me-2"></i>
+                    Historique des suppressions
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                {% set historique = app.session.get('historique_suppressions', []) %}
+                
+                {% if historique|length > 0 %}
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Membre supprimé</th>
+                                    <th>Email</th>
+                                    <th>Raison</th>
+                                    <th>Détails</th>
+                                    <th>Responsable</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for suppression in historique|reverse %}
+                                    <tr class="{% if loop.first %}table-danger{% else %}{% endif %}">
+                                        <td class="text-nowrap">
+                                            <small>{{ suppression.date }}</small>
+                                        </td>
+                                        <td>
+                                            <strong>{{ suppression.membre_prenom }} {{ suppression.membre_nom }}</strong>
+                                        </td>
+                                        <td>
+                                            <small>{{ suppression.membre_email }}</small>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-warning">{{ suppression.raison }}</span>
+                                        </td>
+                                        <td>
+                                            {% if suppression.details %}
+                                                <small>{{ suppression.details|slice(0, 50) }}{% if suppression.details|length > 50 %}...{% endif %}</small>
+                                            {% else %}
+                                                <small class="text-muted">Aucun détail</small>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <small>{{ suppression.responsable_prenom }} {{ suppression.responsable_nom }}</small>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="alert alert-info mt-3">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Note :</strong> Cet historique est stocké dans la session et sera perdu lorsque vous vous déconnecterez.
+                        Pour un historique permanent, envisagez de créer une table dédiée dans la base de données.
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-history fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">Aucune suppression enregistrée</h5>
+                        <p class="text-muted">L'historique des suppressions apparaîtra ici.</p>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="modal-footer">
+                {% if historique|length > 0 %}
+                    <button type="button" class="btn btn-outline-danger" onclick="clearHistorique()">
+                        <i class="fas fa-trash me-2"></i>
+                        Vider l'historique
+                    </button>
+                {% endif %}
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>
+                    Fermer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script pour vider l'historique -->
+<script>
+function clearHistorique() {
+    if (confirm('Êtes-vous sûr de vouloir vider tout l\'historique des suppressions ?')) {
+        fetch('{{ path("app_clear_historique") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Erreur lors de la suppression de l\'historique.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Erreur lors de la suppression de l\'historique.');
+        });
+    }
+}
+</script>
+{% endblock %}

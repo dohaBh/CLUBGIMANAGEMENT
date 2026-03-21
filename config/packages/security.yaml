@@ -1,0 +1,17 @@
+# config/packages/security.yaml
+security:
+    password_hashers:
+        App\Entity\User: 'auto'
+    
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+    
+    firewalls:
+        main:
+            # Désactive la sécurité pour tout sauf ce que tu veux protéger
+            security: false  # ⬅️ Désactive le firewall Symfony
+    
+    access_control: []  # Vide, tu gères tout dans tes controllers

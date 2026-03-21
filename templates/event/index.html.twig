@@ -1,0 +1,316 @@
+{% extends 'baseDash.html.twig' %}
+
+{% block title %}Événements du Club{% endblock %}
+{% block stylesheets %}
+     {{ parent() }} 
+    <link rel="stylesheet" href="{{ asset('css/indexEvent.css') }}">
+
+{% endblock %}
+{% block body %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="floating">Événements du Club</h1>
+            <p class="subtitle">Découvrez nos prochaines rencontres</p>
+            {% if isResponsable %}
+                <a href="{{ path('app_event_new') }}" class="btn-add">
+                    Nouvel Événement
+                </a>
+            {% endif %}
+        </header>
+
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">Tous</button>
+            <button class="filter-btn" data-filter="Planifié">Planifiés</button>
+            <button class="filter-btn" data-filter="En cours">En cours</button>
+            <button class="filter-btn" data-filter="Terminé">Terminés</button>
+        </div>
+
+        <div class="events-grid" id="eventsGrid"></div>
+    </div>
+
+    <!-- Modal de détails -->
+    <div class="modal" id="eventModal">
+        <div class="modal-overlay" onclick="closeModal()"></div>
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmation -->
+    <div class="modal" id="confirmModal">
+        <div class="modal-overlay" onclick="closeConfirmModal()"></div>
+        <div class="modal-content modal-small">
+            <h3 style="color: #d4af37; margin-bottom: 20px;">Confirmer la suppression</h3>
+            <p style="color: #cbd5e1; margin-bottom: 30px;">Êtes-vous sûr de vouloir supprimer cet événement ?</p>
+            <div style="display: flex; gap: 15px; justify-content: flex-end;">
+                <button class="btn-secondary" onclick="closeConfirmModal()">Annuler</button>
+                <button class="btn-danger" onclick="confirmDelete()">Supprimer</button>
+            </div>
+        </div>
+    </div>
+<script>
+    // Utiliser la variable isResponsable passée depuis le contrôleur
+    const isResponsable = {{ isResponsable ? 'true' : 'false' }};
+    const events = {{ events|json_encode|raw }};
+
+    // CORRECTION ICI : Utiliser les bonnes valeurs de l'enum
+    const statusClasses = {
+        'planifee': 'planifiee',    // Note: "planifee" avec un seul 'f'
+        'en_cours': 'en_cours',
+        'annulee': 'annulee',
+        'terminee': 'terminee'
+    };
+
+    // CORRECTION ICI : Noms affichés dans les filtres
+    const filterMapping = {
+        'Planifié': 'planifee',
+        'En cours': 'en_cours',
+        'Terminé': 'terminee',
+        'Annulé': 'annulee'
+    };
+
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return date.toLocaleDateString('fr-FR', options);
+    }
+
+    function getDisplayStatus(statusValue) {
+        // Convertir la valeur de l'enum en texte affichable
+        const statusMap = {
+            'planifee': 'Planifié',
+            'en_cours': 'En cours',
+            'terminee': 'Terminé',
+            'annulee': 'Annulé'
+        };
+        return statusMap[statusValue] || statusValue;
+    }
+
+    function createEventCard(event) {
+        const statutClass = statusClasses[event.statutEvent.value] || 'planifiee';
+        const programmeLines = event.programme ? event.programme.split('\n') : [];
+        const displayStatus = getDisplayStatus(event.statutEvent.value);
+        
+        return `
+            <div class="event-card fade-in" data-status="${event.statutEvent.value}" onclick="showEventDetails(${event.id})">
+                <div class="event-header">
+                    <div class="event-date">${formatDate(event.date.date)}</div>
+                    <h3 class="event-title">${event.titre}</h3>
+                    <div class="event-theme">
+                        <span>${event.theme}</span>
+                    </div>
+                </div>
+                <div class="event-body">
+                    <div class="event-info">
+                        <div class="info-row">
+                            <svg class="info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                            <span>${event.lieu}</span>
+                        </div>
+                    </div>
+                    <div class="event-programme">
+                        ${programmeLines.slice(0, 3).join('<br>')}
+                        ${programmeLines.length > 3 ? '<br>...' : ''}
+                    </div>
+                </div>
+                <div class="event-footer">
+                    <span class="status-badge status-${statutClass}">
+                        ${displayStatus}
+                    </span>
+                    ${event.enCollab ? `
+                        <span class="collab-badge">
+                            ${event.partenaire}
+                        </span>
+                    ` : ''}
+                </div>
+            </div>
+        `;
+    }
+
+    function renderEvents(filter = 'all') {
+        const grid = document.getElementById('eventsGrid');
+        const filteredEvents = filter === 'all' 
+            ? events 
+            : events.filter(e => e.statutEvent.value === filterMapping[filter]);
+
+        if (filteredEvents.length === 0) {
+            grid.innerHTML = '<div class="no-events">Aucun événement trouvé</div>';
+            return;
+        }
+
+        grid.innerHTML = filteredEvents.map(event => createEventCard(event)).join('');
+    }
+
+    function showEventDetails(eventId) {
+        const event = events.find(e => e.id === eventId);
+        if (!event) return;
+
+        const statutClass = statusClasses[event.statutEvent.value] || 'planifiee';
+        const displayStatus = getDisplayStatus(event.statutEvent.value);
+        const modalBody = document.getElementById('modalBody');
+        
+        modalBody.innerHTML = `
+            <div class="modal-header">
+                <h2 class="modal-title">${event.titre}</h2>
+                <p class="modal-subtitle">${event.theme}</p>
+            </div>
+
+            <div class="modal-info-grid">
+                <div class="modal-info-item">
+                    <svg class="modal-info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    <div>
+                        <span class="modal-info-label">Date</span>
+                        <div class="modal-info-text">${formatDate(event.date.date)}</div>
+                    </div>
+                </div>
+
+                <div class="modal-info-item">
+                    <svg class="modal-info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    <div>
+                        <span class="modal-info-label">Lieu</span>
+                        <div class="modal-info-text">${event.lieu}</div>
+                    </div>
+                </div>
+
+                <div class="modal-info-item">
+                    <svg class="modal-info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <div>
+                        <span class="modal-info-label">Statut</span>
+                        <div class="modal-info-text">${displayStatus}</div>
+                    </div>
+                </div>
+            </div>
+
+            ${event.enCollab ? `
+                <div class="modal-section">
+                    <div class="modal-section-title">
+                        🤝 En collaboration avec
+                    </div>
+                    <div class="modal-section-content">
+                        ${event.partenaire}
+                    </div>
+                </div>
+            ` : ''}
+
+            <div class="modal-section">
+                <div class="modal-section-title">
+                    📋 Programme
+                </div>
+                <div class="modal-section-content">
+                    ${event.programme ? event.programme.split('\n').join('<br>') : 'Aucun programme spécifié'}
+                </div>
+            </div>
+
+            ${isResponsable ? `
+                <div class="event-actions">
+                    <a href="/event/${event.id}/edit" class="btn-edit">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
+                        Modifier
+                    </a>
+                    <button class="btn-delete" onclick="openConfirmModal(${event.id})">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                        Supprimer
+                    </button>
+                </div>
+            ` : ''}
+        `;
+
+        document.getElementById('eventModal').classList.add('active');
+    }
+
+    function closeModal() {
+        document.getElementById('eventModal').classList.remove('active');
+    }
+
+    let eventToDelete = null;
+
+    function openConfirmModal(eventId) {
+        eventToDelete = eventId;
+        document.getElementById('confirmModal').classList.add('active');
+        closeModal(); // Close the details modal
+    }
+
+    function closeConfirmModal() {
+        eventToDelete = null;
+        document.getElementById('confirmModal').classList.remove('active');
+    }
+
+    function confirmDelete() {
+        if (eventToDelete) {
+            // Send delete request
+            fetch(`/event/${eventToDelete}/delete`, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Reload the page to see the updated list
+                    window.location.reload();
+                } else {
+                    alert('Erreur lors de la suppression');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Erreur lors de la suppression');
+            });
+        }
+        closeConfirmModal();
+    }
+
+    // Initialize filters
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderEvents(btn.dataset.filter);
+        });
+    });
+
+    // Initial render
+    renderEvents();
+
+    // Close modals with Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeModal();
+            closeConfirmModal();
+        }
+    });
+
+    // Close modals when clicking outside
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+        overlay.addEventListener('click', function() {
+            if (this.parentElement.id === 'eventModal') {
+                closeModal();
+            } else if (this.parentElement.id === 'confirmModal') {
+                closeConfirmModal();
+            }
+        });
+    });
+</script>
+{% endblock %}
